@@ -123,7 +123,7 @@ def get_stockdispo(): # pylint: disable=missing-function-docstring
      with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
-                "select * from Stock_Quantite;"
+                "select * from Stock_Quantite_Disponible;"
             )
             return cur.fetchall()
 
