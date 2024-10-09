@@ -1,0 +1,12 @@
+
+CREATE OR REPLACE TRIGGER change_etat_vendu
+AFTER INSERT
+ON Ligne_Achat
+FOR EACH ROW
+EXECUTE FUNCTION modif_vendu();
+
+CREATE OR REPLACE TRIGGER restock_trigger
+AFTER UPDATE
+ON STOCK
+FOR EACH ROW
+EXECUTE FUNCTION restock_trigger_func();
