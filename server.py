@@ -20,19 +20,19 @@ def get_database():  # pylint: disable=missing-function-docstring
 
 @app.route("/getProfilClient", methods=["GET"])
 def get_ProfilClient():  # pylint: disable=missing-function-docstring
-    return jsonify({"Profil": get_profil()})
+    return jsonify({"table": get_profil()})
 
 @app.route("/getStockDispo", methods=["GET"])
 def get_StockDispo():  # pylint: disable=missing-function-docstring
-    return jsonify({"Stockdispo": get_stockdispo()})
+    return jsonify({"table": get_stockdispo()})
 
 @app.route("/getAllStock", methods=["GET"])
 def get_AllStock():  # pylint: disable=missing-function-docstring
-    return jsonify({"AllStock": get_allstock()})
+    return jsonify({"table": get_allstock()})
     
 @app.route("/getHistorique",methods=["GET"])
 def get_Historique():  # pylint: disable=missing-function-docstring
-    return jsonify({"Historique": get_historique()})
+    return jsonify({"table": get_historique()})
 
 
 
