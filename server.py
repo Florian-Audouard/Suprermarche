@@ -18,6 +18,13 @@ def index():  # pylint: disable=missing-function-docstring
 def get_database():  # pylint: disable=missing-function-docstring
     return jsonify({"table": get_data()})
 
+@app.route("/getProfil", methods=["GET"])
+def get_profil():  # pylint: disable=missing-function-docstring
+    return jsonify({"Profil": get_profil()})
 
+@app.route("/getStockDispo", methods=["GET"])
+def get_stockdispo():  # pylint: disable=missing-function-docstring
+    return jsonify({"Stockdispo": get_stockdispo()})
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)
