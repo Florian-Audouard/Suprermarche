@@ -109,6 +109,33 @@ def add_transaction():  # pylint: disable=missing-function-docstring
                     ),
                 )
 
+--permet d'obtenir tous les articles disponibles en magasin
+def get_stockdispo(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select * from Stock_Quantite_Disponible;"
+            )
+            return cur.fetchall()
+
+--permet d'obtenir toutes les infos des stocks
+def get_allstock(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select * from Produit;"
+            )
+            return cur.fetchall()
+
+--permet l'historique des achats := ligneachat
+def get_historique(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select * from Ligne_Achat;"
+            )
+            return cur.fetchall()
+
 if __name__ == "__main__":
     reset_table()
     init_data()
