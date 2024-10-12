@@ -154,7 +154,18 @@ def get_detailhist(): # pylint: disable=missing-function-docstring
                 "SELECT * FROM Client_Produit;"
             )
             return cur.fetchall()
-            
+
+#permet d'obtenir tout le stock vendu
+def get_allstockvendu(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                """SELECT * 
+                FROM Produit_in_stock 
+                WHERE Produit_in_stock.Etat ='Vendu'; """)
+            return cur.fetchall()
+
+
 if __name__ == "__main__":
     reset_table()
     init_data()
