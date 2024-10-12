@@ -38,5 +38,9 @@ def get_Historique():  # pylint: disable=missing-function-docstring
 def get_DetailHist():  # pylint: disable=missing-function-docstring
     return jsonify({"table": get_detailhist()})
 
+@app.route("/getAllStockVendu",methods=["GET"])
+def get_AllStockVendu():  # pylint: disable=missing-function-docstring
+    return jsonify({"table": get_allstockvendu()})
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)
