@@ -133,7 +133,7 @@ def get_allstock(): # pylint: disable=missing-function-docstring
      with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
-                "select * from Produit;"
+                "select * from Stock_Quantite;"
             )
             return cur.fetchall()
 
