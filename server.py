@@ -6,7 +6,7 @@ os.chdir(os.path.dirname(__file__))
 app = Flask(__name__)
 
 # Si il est mis plus haut la page crash
-from database.database import get_data
+from database.database import *
 
 
 @app.route("/")
