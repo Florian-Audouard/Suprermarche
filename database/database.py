@@ -145,7 +145,16 @@ def get_historique(): # pylint: disable=missing-function-docstring
                 "select * from Ligne_Achat;"
             )
             return cur.fetchall()
-
+            
+#permet d'obtenir le detail de l'historique
+def get_detailhist(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM Client_Produit;"
+            )
+            return cur.fetchall()
+            
 if __name__ == "__main__":
     reset_table()
     init_data()
