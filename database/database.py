@@ -112,7 +112,7 @@ def add_transaction():  # pylint: disable=missing-function-docstring
 
 #permet d'obtenir toutes les informations du clients or mdp et login
 def get_profil(): # pylint: disable=missing-function-docstring
-     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 "select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client;"
@@ -121,7 +121,7 @@ def get_profil(): # pylint: disable=missing-function-docstring
             
 #permet d'obtenir tous les articles disponibles en magasin
 def get_stockdispo(): # pylint: disable=missing-function-docstring
-     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 "select * from Stock_Quantite_Disponible;"
@@ -130,7 +130,7 @@ def get_stockdispo(): # pylint: disable=missing-function-docstring
 
 #permet d'obtenir toutes les infos des stocks
 def get_allstock(): # pylint: disable=missing-function-docstring
-     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 "select * from Stock_Quantite;"
@@ -139,7 +139,7 @@ def get_allstock(): # pylint: disable=missing-function-docstring
 
 #permet l'historique des achats := ligneachat
 def get_historique(): # pylint: disable=missing-function-docstring
-     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 "select * from Ligne_Achat;"
@@ -148,7 +148,7 @@ def get_historique(): # pylint: disable=missing-function-docstring
             
 #permet d'obtenir le detail de l'historique
 def get_detailhist(): # pylint: disable=missing-function-docstring
-     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 "SELECT * FROM Client_Produit;"
@@ -157,7 +157,7 @@ def get_detailhist(): # pylint: disable=missing-function-docstring
 
 #permet d'obtenir tout le stock vendu
 def get_allstockvendu(): # pylint: disable=missing-function-docstring
-     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 """SELECT * 
