@@ -41,10 +41,12 @@ def clean_querry(func):
     def wrapper_func(*args, **kwargs):
         res = ""
         postgres = psycopg2.connect(CONN_PARAMS)
-        with postgres as conn:  # pylint: disable=not-context-manager
-            with conn.cursor() as cur:
-                res = func(cur,*args, **kwargs)
-        postgres.close()
+        try:
+            with postgres as conn:  # pylint: disable=not-context-manager
+                with conn.cursor() as cur:
+                    res = func(cur,*args, **kwargs)
+        finally:
+            postgres.close()
         return res
     return wrapper_func
 
