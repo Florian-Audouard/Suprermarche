@@ -1,38 +1,25 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPassword, setCookie } from "../helpers/LogIn";
+import { setCookie } from "../helpers/LogIn";
 import { disconnect } from "../helpers/Disconnect";
 import "../styles/Account.css";
 import md5 from "md5";
 import { getUrl } from "../helpers/GetUrl";
 
-const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
+const Account = ({
+	isLogIn,
+	setIsLogIn,
+	username,
+	setUsername,
+	nom,
+	prenom,
+	points,
+}) => {
 	const [password, setPassword] = useState("");
 	const [textConnection, setTextConnection] = useState("");
-	const [nom, setNom] = useState("");
-	const [prenom, setPrenom] = useState("");
-	const [points, setPoints] = useState("");
+
 	const input2 = useRef(null);
 	const navigate = useNavigate();
-	useEffect(() => {
-		if (username === "" || username === undefined) return;
-		let md5Password = getPassword();
-
-		if (md5Password === "" || md5Password === undefined) return;
-
-		fetch(getUrl() + "/getProfilClient", {
-			method: "POST",
-			body: JSON.stringify({ username, password: md5Password }),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				let table = data.table[0];
-
-				setNom(table[1]);
-				setPrenom(table[2]);
-				setPoints(table[3]);
-			});
-	}, [username, isLogIn, password]);
 
 	const keyInputHandler = (event) => {
 		if (event.key !== "Enter") return;
@@ -49,11 +36,11 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 	};
 	const tryLogIn = () => {
 		if (username === "") {
-			setTextConnection("Username can't be empty");
+			setTextConnection("Le nom d'utilisateur ne peut pas être vide");
 			return;
 		}
 		if (password === "") {
-			setTextConnection("Password can't be empty");
+			setTextConnection("Le mot de passe ne peut pas être vide");
 			return;
 		}
 		let md5Password = md5(password);
@@ -69,7 +56,9 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 					setCookie("password", md5Password);
 					setIsLogIn(true);
 				} else {
-					setTextConnection("Invalid username or password");
+					setTextConnection(
+						"Nom d'utilisateur ou mots de passe incorrect"
+					);
 				}
 			});
 	};
@@ -84,7 +73,7 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 		<div id="account">
 			{isLogIn ? (
 				<div>
-					<div>Bonjour Monsieur {nom + " " + prenom}</div>
+					<div>{nom + " " + prenom}</div>
 					<div>Nombre de points : {points}</div>
 					<button
 						className="autor"
