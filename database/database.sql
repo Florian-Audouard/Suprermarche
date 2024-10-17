@@ -32,6 +32,7 @@ Mail VARCHAR(250),
 Num_Tel VARCHAR(10),
 ID VARCHAR(20) NOT NULL,
 MDP VARCHAR(32) NOT NULL,
+STATUT VARCHAR(20) NOT NULL,
 
 CONSTRAINT Age CHECK (Age>=18), --les clients doivent avoir au moins 18 ans pour être abonné au magasin
 CONSTRAINT PointsFidelite CHECK(Pt_Fidelite >= 0) --Il est impossible que les client aient des points de fidelite negatifs

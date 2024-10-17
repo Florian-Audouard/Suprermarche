@@ -91,7 +91,7 @@ def achat(cur,client, paiement, list_achat):
 
 @clean_querry
 def add_transaction(cur):
-    cur.execute("""SELECT num_client FROM client; """)
+    cur.execute("""SELECT num_client FROM Client WHERE Client.Statut='Client'; """)
     tmp = cur.fetchall()
     list_cli = [x[0] for x in tmp]
     cur.execute("""SELECT Num_Paiement FROM Paiement """)
