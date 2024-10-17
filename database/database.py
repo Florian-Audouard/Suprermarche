@@ -23,18 +23,21 @@ if os.path.exists(ENV_FILENAME):
     config = dotenv_values(ENV_FILENAME)
 else:
     config = {
-        "USER":os.environ.get("USER_DB"),
-        "PASSWORD":os.environ.get("PASSWORD_DB"),
-        "HOST":os.environ.get("HOST_DB"),
-        "PORT":os.environ.get("PORT_DB"),
-        "DATABASE":os.environ.get("DATABASE_DB"),
+        "USER_DB": os.environ.get("USER_DB"),
+        "PASSWORD_DB": os.environ.get("PASSWORD_DB"),
+        "HOST_DB": os.environ.get("HOST_DB"),
+        "PORT_DB": os.environ.get("PORT_DB"),
+        "DATABASE_DB": os.environ.get("DATABASE_DB"),
     }
+
+FILENAME_DB_SHEMA = "database.sql"
+options = urllib.parse.quote_plus("--search_path=modern,public")
+CONN_PARAMS = f"postgresql://{config['USER_DB']}:{config['PASSWORD_DB']}@{config['HOST_DB']}:{config['PORT_DB']}/{config['DATABASE_DB']}?options={options}"  # pylint: disable=line-too-long
+
+
 FILENAME_TAB = ["database.sql", "function.sql", "trigger.sql"]
 
 FILENAME_DB_DONNE = "donne_test.sql"
-options = urllib.parse.quote_plus("--search_path=modern,public")
-CONN_PARAMS = f"postgresql://{config['USER']}:{config['PASSWORD']}@{config['HOST']}:{config['PORT']}/{config['DATABASE']}?options={options}"  # pylint:disable=line-too-long
-
 
 def clean_querry(func):
     def wrapper_func(*args, **kwargs):
