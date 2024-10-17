@@ -4,8 +4,10 @@ import { getPassword, getUsername } from "../helpers/LogIn";
 import "../styles/Profile.css";
 const Profile = () => {
 	const [nom, setNom] = useState("allo");
-
+	const [isClicked, setIsClicked] = useState(false);
+	const test_map = ["1", "2", "3"];
 	useEffect(() => {
+		setIsClicked(false);
 		let username = getUsername();
 		let md5Password = getPassword();
 		fetch(getUrl() + "/getProfilClient", {
@@ -18,10 +20,17 @@ const Profile = () => {
 				setNom(table[1]);
 			});
 	}, []);
-
+	function testClick(event) {
+		setIsClicked(!isClicked);
+	}
 	return (
 		<div id="profile">
-			<div>Nom : {nom}</div>
+			<div onClick={testClick}>Nom : {nom}</div>
+			{isClicked ? (
+				test_map.map((e) => <div key={e}>{e}</div>)
+			) : (
+				<span></span>
+			)}
 		</div>
 	);
 };
