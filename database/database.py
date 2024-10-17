@@ -169,7 +169,7 @@ def get_all_stock_vendu_data(cur):
 
 def auth(cur, username, password):
     cur.execute(
-        "SELECT count(username) FROM Client WHERE username = %(username)s AND password = %(password)s;",
+        "SELECT count(ID) FROM Client WHERE ID = %(username)s AND MDP = %(password)s;",
         {"username": str(username), "password": str(password)},
     )
     if cur.fetchall()[0][0] == 1:
