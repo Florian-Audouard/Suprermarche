@@ -1,5 +1,7 @@
 Prénom Nom : Florian Audouard , Loïs Hermelin , Emad Ba Gubair
 
+[Voici le site](https://suprermarche.vercel.app/)
+
 # Principe de l’application :
 
 L’application vise à gerer les stocks, l’historique des ventes et les informations des clients d’un magasin.
