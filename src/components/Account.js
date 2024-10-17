@@ -51,6 +51,13 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 				}
 			});
 	};
+	const showPassword = (event) => {
+		if (event.target.checked) {
+			input2.current.type = "text";
+		} else {
+			input2.current.type = "password";
+		}
+	};
 	return (
 		<div id="account">
 			{isLogIn ? (
@@ -90,9 +97,12 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 						onChange={(e) => setPassword(e.target.value)}
 						onKeyUp={keyInputHandler}
 					/>
+					<input type="checkbox" onChange={showPassword} /> Show
+					password
 					<button id="connectionButton" onClick={tryLogIn}>
 						Connection
 					</button>
+					<div>{textConnection}</div>
 				</div>
 			)}
 		</div>
