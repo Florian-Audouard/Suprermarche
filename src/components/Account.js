@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setCookie } from "../helpers/LogIn";
+import { getPassword, setCookie } from "../helpers/LogIn";
 import { disconnect } from "../helpers/Disconnect";
 import "../styles/Account.css";
 import md5 from "md5";
@@ -9,8 +9,30 @@ import { getUrl } from "../helpers/GetUrl";
 const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 	const [password, setPassword] = useState("");
 	const [textConnection, setTextConnection] = useState("");
+	const [nom, setNom] = useState("");
+	const [prenom, setPrenom] = useState("");
+	const [points, setPoints] = useState("");
 	const input2 = useRef(null);
 	const navigate = useNavigate();
+	useEffect(() => {
+		if (username === "" || username === undefined) return;
+		let md5Password = getPassword();
+
+		if (md5Password === "" || md5Password === undefined) return;
+
+		fetch(getUrl() + "/getProfilClient", {
+			method: "POST",
+			body: JSON.stringify({ username, password: md5Password }),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				let table = data.table[0];
+
+				setNom(table[1]);
+				setPrenom(table[2]);
+				setPoints(table[3]);
+			});
+	}, [username, isLogIn, password]);
 
 	const keyInputHandler = (event) => {
 		if (event.key !== "Enter") return;
@@ -62,20 +84,21 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 		<div id="account">
 			{isLogIn ? (
 				<div>
-					<label>Connected</label>
-					<div
+					<div>Bonjour Monsieur {nom + " " + prenom}</div>
+					<div>Nombre de points : {points}</div>
+					<button
 						className="autor"
 						onClick={(_) => navigate("/profile/" + username)}
 					>
-						{username.toUpperCase()}
-					</div>
+						Voir profile
+					</button>
 					<button
 						onClick={(_) => {
 							disconnect();
 							setIsLogIn(false);
 						}}
 					>
-						DISCONNECT
+						Se déconnecter
 					</button>
 				</div>
 			) : (
@@ -97,8 +120,14 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 						onChange={(e) => setPassword(e.target.value)}
 						onKeyUp={keyInputHandler}
 					/>
-					<input type="checkbox" onChange={showPassword} /> Show
-					password
+					<div>
+						<input
+							id="checkBoxPassword"
+							type="checkbox"
+							onChange={showPassword}
+						/>{" "}
+						Show password
+					</div>
 					<button id="connectionButton" onClick={tryLogIn}>
 						Connection
 					</button>

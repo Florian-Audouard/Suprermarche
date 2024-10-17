@@ -6,7 +6,7 @@
 # pylint:disable=wrong-import-position
 # pylint:disable=line-too-long
 import os
-from flask import Flask, jsonify, render_template,request
+from flask import Flask, jsonify, render_template, request
 import json
 from flask_cors import CORS
 from dotenv import dotenv_values
@@ -23,7 +23,7 @@ from database.database import (
     get_historique_data,
     get_detail_historique,
     get_all_stock_vendu_data,
-    connection
+    connection,
 )
 
 
@@ -37,11 +37,11 @@ def get_database():  # pylint: disable=missing-function-docstring
     return jsonify({"table": get_data()})
 
 
-@app.route("/getProfilClient", methods=["GET"])
+@app.route("/getProfilClient", methods=["POST"])
 def get_profil_client():
     result = request.get_data()
-    id_client = json.loads(result.decode("utf-8"))["num_client"]
-    return jsonify({"table": get_profil(id_client)})
+    id = json.loads(result.decode("utf-8"))
+    return jsonify({"table": get_profil(id["username"], id["password"])})
 
 
 @app.route("/getStockDispo", methods=["GET"])
@@ -77,6 +77,7 @@ def log_in():  # pylint: disable=missing-function-docstring
 
 
 ENV_FILENAME = ".env"
+
 
 def main():
     os.chdir(os.path.dirname(__file__))

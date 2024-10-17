@@ -10,16 +10,12 @@ const Home = () => {
 	}, []);
 	return (
 		<span className="Home">
-			{!isLogIn ? (
-				<Account
-					isLogIn={isLogIn}
-					setIsLogIn={setIsLogIn}
-					username={username}
-					setUsername={setUsername}
-				/>
-			) : (
-				""
-			)}
+			<Account
+				isLogIn={isLogIn}
+				setIsLogIn={setIsLogIn}
+				username={username}
+				setUsername={setUsername}
+			/>
 		</span>
 	);
 };
