@@ -1,14 +1,13 @@
-INSERT INTO Client (Nom,Prenom,Pt_Fidelite,Age,Mail,Num_Tel) VALUES
-    ('Dupont', 'Jean', 0, 35, 'jean.dupont@mail.com', '0601020304'),
-    ('Martin', 'Marie', 0, 28, 'marie.martin@mail.com', '0602030405'),
-    ('Bernard', 'Paul', 0, 42, 'paul.bernard@mail.com', '0603040506'),
-    ('Dubois', 'Pierre', 0, 31, 'pierre.dubois@mail.com', '0604050607'),
-    ('Durand', 'Luc', 0, 45, 'luc.durand@mail.com', '0605060708'),
-    ('Lefevre', 'Sophie', 0, 29, 'sophie.lefevre@mail.com', '0606070809'),
-    ('Moreau', 'Pierre', 0, 39, 'pierre.moreau@mail.com', '0607080910'),
-    ('Simon', 'Claire', 0, 33, 'claire.simon@mail.com', '0608091011'),
-    ('Laurent', 'Nicolas', 0, 27, 'nicolas.laurent@mail.com', '0609101112');
-
+INSERT INTO Client (Nom,Prenom,Pt_Fidelite,Age,Mail,Num_Tel,ID,MDP) VALUES
+    ('Dupont', 'Jean', 0, 35, 'jean.dupont@mail.com', '0601020304','JDupont','motdepasse'),
+    ('Martin', 'Marie', 0, 28, 'marie.martin@mail.com', '0602030405','MMartin','H0ll4@U'),
+    ('Bernard', 'Paul', 0, 42, 'paul.bernard@mail.com', '0603040506','PBernard','S3bL4FR!t3'),
+    ('Dubois', 'Pierre', 0, 31, 'pierre.dubois@mail.com', '0604050607','PDubois','D0l!Pr4n3'),
+    ('Durand', 'Luc', 0, 45, 'luc.durand@mail.com', '0605060708','LDurand','Or4Ng!N@'),
+    ('Lefevre', 'Sophie', 0, 29, 'sophie.lefevre@mail.com', '0606070809','SLefevre','C4t4ev3r'),
+    ('Moreau', 'Pierre', 0, 39, 'pierre.moreau@mail.com', '0607080910','PMoreau','G30duD3'),
+    ('Simon', 'Claire', 0, 33, 'claire.simon@mail.com', '0608091011','CSimon','SHr3k!Sl0v3'),
+    ('Laurent', 'Nicolas', 0, 27, 'nicolas.laurent@mail.com', '0609101112','NLaurent','H4rRYP0tt3R');
 
 INSERT INTO Paiement VALUES
     (1, 'Carte bancaire'),
@@ -25,7 +24,7 @@ INSERT INTO Danger VALUES
     (6, 'Étiquetage erroné', 'Vérifier que toutes les informations sur l''étiquette, comme les ingrédients et la date de péremption, sont correctes'),
     (7, 'Produits inflammables', 'Conserver les produits inflammables, tels que les aérosols ou les alcools forts, dans des zones sûres et bien ventilées'),
     (8, 'Réactions à des additifs alimentaires', 'Informer les clients des risques potentiels liés aux additifs comme les conservateurs et les colorants artificiels'),
-    (9, 'Défaut de traçabilité', 'S''assurer que chaque lot de produits dispose d''une traçabilité claire pour faciliter les rappels en cas de problème sanitaire'),
+    (9, 'Défaut de traçabilité', 'S assurer que chaque lot de produits dispose d''une traçabilité claire pour faciliter les rappels en cas de problème sanitaire'),
     (10, 'Usage incorrect des produits ménagers', 'Indiquer clairement les instructions d''utilisation sur les produits ménagers pour éviter tout risque d''intoxication ou de brûlure');
 
 INSERT INTO Categorie VALUES

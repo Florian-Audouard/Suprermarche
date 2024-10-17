@@ -164,6 +164,21 @@ def get_all_stock_vendu_data(cur):
     return cur.fetchall()
 
 
+
+def auth(cur, username, password):
+    cur.execute(
+        "SELECT count(username) FROM Client WHERE username = %(username)s AND password = %(password)s;",
+        {"username": str(username), "password": str(password)},
+    )
+    if cur.fetchall()[0][0] == 1:
+        return True
+    return False
+
+@clean_querry
+def connection(cur,username, password):
+            return auth(cur, username, password)
+
+
 if __name__ == "__main__":
     reset_table()
     init_data()
