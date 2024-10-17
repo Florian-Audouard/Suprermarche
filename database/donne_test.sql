@@ -1,5 +1,5 @@
 INSERT INTO Client (Nom,Prenom,Pt_Fidelite,Age,Mail,Num_Tel,ID,MDP,STATUT) VALUES
-    ('Dupont', 'Jean', 0, 3000, NULL, NULL,'JDupont','f02368945726d5fc2a14eb576f7276c0','Admin'), --bonjour
+    ('Dupont', 'Jean', NULL, 3000, NULL, NULL,'JDupont','f02368945726d5fc2a14eb576f7276c0','Admin'), --bonjour
     ('Martin', 'Marie', 0, 28, 'marie.martin@mail.com', '0602030405','MMartin','f02368945726d5fc2a14eb576f7276c0','Client'), --bonjour
     ('Bernard', 'Paul', 0, 42, 'paul.bernard@mail.com', '0603040506','PBernard','f02368945726d5fc2a14eb576f7276c0','Client'), --bonjour
     ('Dubois', 'Pierre', 0, 31, 'pierre.dubois@mail.com', '0604050607','PDubois','ab4f63f9ac65152575886860dde480a1','Client'), --azerty
