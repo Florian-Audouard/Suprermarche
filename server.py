@@ -7,8 +7,9 @@
 #pylint:disable=line-too-long
 import os
 from flask import Flask, jsonify, render_template
+from dotenv import dotenv_values
 
-os.chdir(os.path.dirname(__file__))
+
 
 app = Flask(__name__)
 
@@ -48,6 +49,16 @@ def get_detail_hist():  # pylint: disable=missing-function-docstring
 @app.route("/getAllStockVendu",methods=["GET"])
 def get_all_stock_vendu():  # pylint: disable=missing-function-docstring
     return jsonify({"table": get_all_stock_vendu_data()})
-    
+
+ENV_FILENAME = ".env"
+
+def main():
+    os.chdir(os.path.dirname(__file__))
+    port = 80
+    if os.path.exists(ENV_FILENAME):
+        config = dotenv_values(ENV_FILENAME)
+        port = int(config["PORT"])
+    app.run(host="0.0.0.0", port=port)
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    main()
