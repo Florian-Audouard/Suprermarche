@@ -6,7 +6,7 @@
 # pylint:disable=wrong-import-position
 # pylint:disable=line-too-long
 import os
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, send_from_directory, request
 import json
 from flask_cors import CORS
 from dotenv import dotenv_values
@@ -27,9 +27,12 @@ from database.database import (
 )
 
 
-@app.route("/")
-def index():  # pylint: disable=missing-function-docstring
-    return render_template("index.html")
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def index(path):  # pylint: disable=missing-function-docstring
+    if path != "" and os.path.exists(app.static_folder + "/" + path):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route("/getDatabase", methods=["GET"])
