@@ -1,13 +1,13 @@
 INSERT INTO Client (Nom,Prenom,Pt_Fidelite,Age,Mail,Num_Tel,ID,MDP) VALUES
-    ('Dupont', 'Jean', 0, 35, 'jean.dupont@mail.com', '0601020304','JDupont','motdepasse'),
-    ('Martin', 'Marie', 0, 28, 'marie.martin@mail.com', '0602030405','MMartin','H0ll4@U'),
-    ('Bernard', 'Paul', 0, 42, 'paul.bernard@mail.com', '0603040506','PBernard','S3bL4FR!t3'),
-    ('Dubois', 'Pierre', 0, 31, 'pierre.dubois@mail.com', '0604050607','PDubois','D0l!Pr4n3'),
-    ('Durand', 'Luc', 0, 45, 'luc.durand@mail.com', '0605060708','LDurand','Or4Ng!N@'),
-    ('Lefevre', 'Sophie', 0, 29, 'sophie.lefevre@mail.com', '0606070809','SLefevre','C4t4ev3r'),
-    ('Moreau', 'Pierre', 0, 39, 'pierre.moreau@mail.com', '0607080910','PMoreau','G30duD3'),
-    ('Simon', 'Claire', 0, 33, 'claire.simon@mail.com', '0608091011','CSimon','SHr3k!Sl0v3'),
-    ('Laurent', 'Nicolas', 0, 27, 'nicolas.laurent@mail.com', '0609101112','NLaurent','H4rRYP0tt3R');
+    ('Dupont', 'Jean', 0, 35, 'jean.dupont@mail.com', '0601020304','JDupont','f02368945726d5fc2a14eb576f7276c0'), --bonjour
+    ('Martin', 'Marie', 0, 28, 'marie.martin@mail.com', '0602030405','MMartin','f02368945726d5fc2a14eb576f7276c0'), --bonjour
+    ('Bernard', 'Paul', 0, 42, 'paul.bernard@mail.com', '0603040506','PBernard','f02368945726d5fc2a14eb576f7276c0'), --bonjour
+    ('Dubois', 'Pierre', 0, 31, 'pierre.dubois@mail.com', '0604050607','PDubois','ab4f63f9ac65152575886860dde480a1'), --azerty
+    ('Durand', 'Luc', 0, 45, 'luc.durand@mail.com', '0605060708','LDurand','ab4f63f9ac65152575886860dde480a1'), --azerty
+    ('Lefevre', 'Sophie', 0, 29, 'sophie.lefevre@mail.com', '0606070809','SLefevre','ab4f63f9ac65152575886860dde480a1'),  --azerty
+    ('Moreau', 'Pierre', 0, 39, 'pierre.moreau@mail.com', '0607080910','PMoreau','70d4539ead3248bd4b79ede8ad3954ea'), --shreckislove
+    ('Simon', 'Claire', 0, 33, 'claire.simon@mail.com', '0608091011','CSimon','70d4539ead3248bd4b79ede8ad3954ea'), --shreckislove
+    ('Laurent', 'Nicolas', 0, 27, 'nicolas.laurent@mail.com', '0609101112','NLaurent','70d4539ead3248bd4b79ede8ad3954ea'); --shreckislove
 
 INSERT INTO Paiement VALUES
     (1, 'Carte bancaire'),
