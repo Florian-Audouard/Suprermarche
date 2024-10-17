@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "../helpers/LogIn";
 import { disconnect } from "../helpers/Disconnect";
@@ -21,6 +21,11 @@ const Account = ({
 
 	const input2 = useRef(null);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		setTextConnection("");
+	}, []);
+
 	const keyInputHandler = (event) => {
 		if (event.key !== "Enter") return;
 		switch (event.target.id) {
@@ -51,7 +56,7 @@ const Account = ({
 			.then((res) => res.json())
 			.then((data) => {
 				if (data === "True") {
-					setTextConnection("Connected");
+					setTextConnection("");
 					setCookie("username", username);
 					setCookie("password", md5Password);
 					setIsLogIn(true);
@@ -73,18 +78,23 @@ const Account = ({
 		<div id="account">
 			{isLogIn ? (
 				<div>
-					<div>{nom + " " + prenom}</div>
+					<div>
+						{nom + " " + prenom + (isAdmin ? " (Admin)" : "")}
+					</div>
 					{!isAdmin ? (
-						<div>Nombre de points : {points}</div>
+						<span>
+							<div>Nombre de points : {points}</div>
+							<button
+								className="profile"
+								onClick={(_) => navigate("/profile/")}
+							>
+								Voir profile
+							</button>
+						</span>
 					) : (
 						<span></span>
 					)}
-					<button
-						className="autor"
-						onClick={(_) => navigate("/profile/")}
-					>
-						Voir profile
-					</button>
+
 					<button
 						onClick={(_) => {
 							disconnect();
