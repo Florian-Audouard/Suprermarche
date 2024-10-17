@@ -126,7 +126,7 @@ def get_profil(cur, username, password):
     if not auth(cur, username, password):
         return
     cur.execute(
-        """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client
+        """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel,statut from Client
             WHERE ID = %(username)s;""",
         {"username": username},
     )

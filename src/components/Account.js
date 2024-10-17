@@ -14,13 +14,13 @@ const Account = ({
 	nom,
 	prenom,
 	points,
+	isAdmin,
 }) => {
 	const [password, setPassword] = useState("");
 	const [textConnection, setTextConnection] = useState("");
 
 	const input2 = useRef(null);
 	const navigate = useNavigate();
-
 	const keyInputHandler = (event) => {
 		if (event.key !== "Enter") return;
 		switch (event.target.id) {
@@ -74,7 +74,11 @@ const Account = ({
 			{isLogIn ? (
 				<div>
 					<div>{nom + " " + prenom}</div>
-					<div>Nombre de points : {points}</div>
+					{!isAdmin ? (
+						<div>Nombre de points : {points}</div>
+					) : (
+						<span></span>
+					)}
 					<button
 						className="autor"
 						onClick={(_) => navigate("/profile/")}
