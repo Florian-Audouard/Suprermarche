@@ -6,13 +6,13 @@
 # pylint:disable=wrong-import-position
 # pylint:disable=line-too-long
 import os
-from flask import Flask, jsonify, render_template,request
+from flask import Flask, jsonify, send_from_directory, request
 import json
 from flask_cors import CORS
 from dotenv import dotenv_values
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="./build")
 CORS(app, origins="http://localhost:3000")
 # Si il est mis plus haut la page crash
 from database.database import (
@@ -23,13 +23,16 @@ from database.database import (
     get_historique_data,
     get_detail_historique,
     get_all_stock_vendu_data,
-    connection
+    connection,
 )
 
 
-@app.route("/")
-def index():  # pylint: disable=missing-function-docstring
-    return render_template("index.html")
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def index(path):  # pylint: disable=missing-function-docstring
+    if path != "" and os.path.exists(app.static_folder + "/" + path):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route("/getDatabase", methods=["GET"])
@@ -37,11 +40,11 @@ def get_database():  # pylint: disable=missing-function-docstring
     return jsonify({"table": get_data()})
 
 
-@app.route("/getProfilClient", methods=["GET"])
+@app.route("/getProfilClient", methods=["POST"])
 def get_profil_client():
     result = request.get_data()
-    id_client = json.loads(result.decode("utf-8"))["num_client"]
-    return jsonify({"table": get_profil(id_client)})
+    id = json.loads(result.decode("utf-8"))
+    return jsonify({"table": get_profil(id["username"], id["password"])})
 
 
 @app.route("/getStockDispo", methods=["GET"])
@@ -77,6 +80,7 @@ def log_in():  # pylint: disable=missing-function-docstring
 
 
 ENV_FILENAME = ".env"
+
 
 def main():
     os.chdir(os.path.dirname(__file__))

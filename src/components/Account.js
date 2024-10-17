@@ -6,9 +6,18 @@ import "../styles/Account.css";
 import md5 from "md5";
 import { getUrl } from "../helpers/GetUrl";
 
-const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
+const Account = ({
+	isLogIn,
+	setIsLogIn,
+	username,
+	setUsername,
+	nom,
+	prenom,
+	points,
+}) => {
 	const [password, setPassword] = useState("");
 	const [textConnection, setTextConnection] = useState("");
+
 	const input2 = useRef(null);
 	const navigate = useNavigate();
 
@@ -27,11 +36,11 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 	};
 	const tryLogIn = () => {
 		if (username === "") {
-			setTextConnection("Username can't be empty");
+			setTextConnection("Le nom d'utilisateur ne peut pas être vide");
 			return;
 		}
 		if (password === "") {
-			setTextConnection("Password can't be empty");
+			setTextConnection("Le mot de passe ne peut pas être vide");
 			return;
 		}
 		let md5Password = md5(password);
@@ -47,7 +56,9 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 					setCookie("password", md5Password);
 					setIsLogIn(true);
 				} else {
-					setTextConnection("Invalid username or password");
+					setTextConnection(
+						"Nom d'utilisateur ou mots de passe incorrect"
+					);
 				}
 			});
 	};
@@ -62,20 +73,21 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 		<div id="account">
 			{isLogIn ? (
 				<div>
-					<label>Connected</label>
-					<div
+					<div>{nom + " " + prenom}</div>
+					<div>Nombre de points : {points}</div>
+					<button
 						className="autor"
-						onClick={(_) => navigate("/profile/" + username)}
+						onClick={(_) => navigate("/profile/")}
 					>
-						{username.toUpperCase()}
-					</div>
+						Voir profile
+					</button>
 					<button
 						onClick={(_) => {
 							disconnect();
 							setIsLogIn(false);
 						}}
 					>
-						DISCONNECT
+						Se déconnecter
 					</button>
 				</div>
 			) : (
@@ -97,8 +109,14 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 						onChange={(e) => setPassword(e.target.value)}
 						onKeyUp={keyInputHandler}
 					/>
-					<input type="checkbox" onChange={showPassword} /> Show
-					password
+					<div>
+						<input
+							id="checkBoxPassword"
+							type="checkbox"
+							onChange={showPassword}
+						/>{" "}
+						Show password
+					</div>
 					<button id="connectionButton" onClick={tryLogIn}>
 						Connection
 					</button>

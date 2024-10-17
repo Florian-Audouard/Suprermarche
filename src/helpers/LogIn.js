@@ -47,6 +47,9 @@ export function logIn(setIsLogIn, setUsername) {
 export function getUsername() {
 	return getCookie("username");
 }
+export function getPassword() {
+	return getCookie("password");
+}
 export function setCookie(cname, cvalue) {
 	const date = new Date();
 	date.setFullYear(date.getFullYear() + 100);

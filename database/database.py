@@ -1,8 +1,8 @@
-#pylint:disable=missing-module-docstring
-#pylint:disable=missing-function-docstring
-#pylint:disable = no-value-for-parameter
-#pylint:disable=not-context-manager
-#pylint:disable=trailing-whitespace
+# pylint:disable=missing-module-docstring
+# pylint:disable=missing-function-docstring
+# pylint:disable = no-value-for-parameter
+# pylint:disable=not-context-manager
+# pylint:disable=trailing-whitespace
 import os
 from random import choice, randint, sample
 import urllib.parse
@@ -39,6 +39,7 @@ FILENAME_TAB = ["database.sql", "function.sql", "trigger.sql"]
 
 FILENAME_DB_DONNE = "donne_test.sql"
 
+
 def clean_querry(func):
     def wrapper_func(*args, **kwargs):
         res = ""
@@ -46,17 +47,20 @@ def clean_querry(func):
         try:
             with conn:
                 with conn.cursor() as cur:
-                    res = func(cur,*args, **kwargs)
+                    res = func(cur, *args, **kwargs)
         finally:
             conn.close()
         return res
+
     return wrapper_func
 
+
 @clean_querry
-def reset_table(cur): 
+def reset_table(cur):
     for filename in FILENAME_TAB:
         with open(filename, "r", encoding="utf-8") as file:
             cur.execute(file.read())
+
 
 @clean_querry
 def get_data(cur):
@@ -65,10 +69,12 @@ def get_data(cur):
     )
     return cur.fetchall()
 
+
 @clean_querry
 def init_data(cur):
     with open(FILENAME_DB_DONNE, "r", encoding="utf-8") as file:
         cur.execute(file.read())
+
 
 @clean_querry
 def add_produit(cur):
@@ -79,15 +85,17 @@ def add_produit(cur):
         cur.execute(
             """SELECT add_stock_init(%(Num_Produit)s);""",
             {
-                "Num_Produit":produit,
+                "Num_Produit": produit,
             },
         )
 
-def achat(cur,client, paiement, list_achat): 
+
+def achat(cur, client, paiement, list_achat):
     cur.execute(
         """SELECT transaction(%(client)s,%(paiement)s,%(liste_achat)s);""",
-        {"client":client, "paiement":paiement, "liste_achat":list_achat},
+        {"client": client, "paiement": paiement, "liste_achat": list_achat},
     )
+
 
 @clean_querry
 def add_transaction(cur):
@@ -98,9 +106,7 @@ def add_transaction(cur):
     tmp = cur.fetchall()
     list_paiement = [x[0] for x in tmp]
     for client in list_cli:
-        cur.execute(
-            """SELECT num_description FROM Stock_Quantite_Disponible """
-        )
+        cur.execute("""SELECT num_description FROM Stock_Quantite_Disponible """)
         tmp = cur.fetchall()
         list_stock = [x[0] for x in tmp]
         achat(
@@ -114,57 +120,56 @@ def add_transaction(cur):
         )
 
 
-#permet d'obtenir toutes les informations du clients or mdp et login
+# permet d'obtenir toutes les informations du clients or mdp et login
 @clean_querry
-def get_profil(cur,id_client):
+def get_profil(cur, username, password):
+    if not auth(cur, username, password):
+        return
     cur.execute(
         """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client
-            WHERE Num_client = %(id_client)s;""",
-            {'id_client':id_client}
-        )
+            WHERE ID = %(username)s;""",
+        {"username": username},
+    )
     return cur.fetchall()
-            
-#permet d'obtenir tous les articles disponibles en magasin
+
+
+# permet d'obtenir tous les articles disponibles en magasin
 @clean_querry
 def get_stockdispo(cur):
-    cur.execute(
-        "select * from Stock_Quantite_Disponible;"
-    )
+    cur.execute("select * from Stock_Quantite_Disponible;")
     return cur.fetchall()
 
-#permet d'obtenir toutes les infos des stocks
+
+# permet d'obtenir toutes les infos des stocks
 @clean_querry
 def get_allstock(cur):
-    cur.execute(
-        "select * from Stock_Quantite;"
-    )
+    cur.execute("select * from Stock_Quantite;")
     return cur.fetchall()
 
-#permet l'historique des achats := ligneachat
+
+# permet l'historique des achats := ligneachat
 @clean_querry
 def get_historique_data(cur):
-    cur.execute(
-        "select * from Ligne_Achat;"
-    )
-    return cur.fetchall()
-           
-#permet d'obtenir le detail de l'historique
-@clean_querry
-def get_detail_historique(cur):
-    cur.execute(
-        "SELECT * FROM Client_Produit;"
-    )
+    cur.execute("select * from Ligne_Achat;")
     return cur.fetchall()
 
-#permet d'obtenir tout le stock vendu
+
+# permet d'obtenir le detail de l'historique
+@clean_querry
+def get_detail_historique(cur):
+    cur.execute("SELECT * FROM Client_Produit;")
+    return cur.fetchall()
+
+
+# permet d'obtenir tout le stock vendu
 @clean_querry
 def get_all_stock_vendu_data(cur):
     cur.execute(
         """SELECT * 
         FROM Produit_in_stock 
-        WHERE Produit_in_stock.Etat ='Vendu'; """)
+        WHERE Produit_in_stock.Etat ='Vendu'; """
+    )
     return cur.fetchall()
-
 
 
 def auth(cur, username, password):
@@ -176,9 +181,10 @@ def auth(cur, username, password):
         return True
     return False
 
+
 @clean_querry
-def connection(cur,username, password):
-            return auth(cur, username, password)
+def connection(cur, username, password):
+    return auth(cur, username, password)
 
 
 if __name__ == "__main__":
