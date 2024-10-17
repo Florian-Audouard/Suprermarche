@@ -116,10 +116,12 @@ def add_transaction(cur):
 
 #permet d'obtenir toutes les informations du clients or mdp et login
 @clean_querry
-def get_profil(cur):
+def get_profil(cur,id_client):
     cur.execute(
-        "select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client;"
-    )
+        """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client
+            WHERE Num_client = %(id_client)s;""",
+            {'id_client':id_client}
+        )
     return cur.fetchall()
             
 #permet d'obtenir tous les articles disponibles en magasin
