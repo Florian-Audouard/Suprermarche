@@ -18,25 +18,25 @@ CORS(app, origins="http://localhost:3000")
 from database.database import (
     get_data,
     get_profil,
-    get_stockdispo,
-    get_allstock,
+    get_stock_dispo,
+    get_all_stock,
     get_historique_data,
     get_detail_historique,
-    get_all_stock_vendu_data,
+    get_all_stock_perime_data,
     connection,
 )
 
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
-def index(path):  # pylint: disable=missing-function-docstring
+def index(path):
     if path != "" and os.path.exists(app.static_folder + "/" + path):
         return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route("/getDatabase", methods=["GET"])
-def get_database():  # pylint: disable=missing-function-docstring
+def get_database():
     return jsonify({"table": get_data()})
 
 
@@ -48,32 +48,32 @@ def get_profil_client():
 
 
 @app.route("/getStockDispo", methods=["GET"])
-def get_stock_dispo():  # pylint: disable=missing-function-docstring
-    return jsonify({"table": get_stockdispo()})
+def get_stock_dispo_server():
+    return jsonify({"table": get_stock_dispo()})
 
 
 @app.route("/getAllStock", methods=["GET"])
-def get_all_stock():  # pylint: disable=missing-function-docstring
-    return jsonify({"table": get_allstock()})
+def get_all_stock_server():
+    return jsonify({"table": get_all_stock()})
 
 
 @app.route("/getHistorique", methods=["GET"])
-def get_historique():  # pylint: disable=missing-function-docstring
+def get_historique():
     return jsonify({"table": get_historique_data()})
 
 
 @app.route("/getDetailsHisto", methods=["GET"])
-def get_detail_hist():  # pylint: disable=missing-function-docstring
+def get_detail_hist():
     return jsonify({"table": get_detail_historique()})
 
 
-@app.route("/getAllStockVendu", methods=["GET"])
-def get_all_stock_vendu():  # pylint: disable=missing-function-docstring
-    return jsonify({"table": get_all_stock_vendu_data()})
+@app.route("/getAllStockPerime", methods=["GET"])
+def get_all_stock_perime():
+    return jsonify({"table": get_all_stock_perime_data()})
 
 
 @app.route("/LogIn", methods=["POST"])
-def log_in():  # pylint: disable=missing-function-docstring
+def log_in():
     result = request.get_data()
     id = json.loads(result.decode("utf-8"))
     return jsonify(str(connection(id["username"], id["password"])))

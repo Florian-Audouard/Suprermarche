@@ -135,14 +135,14 @@ def get_profil(cur, username, password):
 
 # permet d'obtenir tous les articles disponibles en magasin
 @clean_querry
-def get_stockdispo(cur):
+def get_stock_dispo(cur):
     cur.execute("select * from Stock_Quantite_Disponible;")
     return cur.fetchall()
 
 
 # permet d'obtenir toutes les infos des stocks
 @clean_querry
-def get_allstock(cur):
+def get_all_stock(cur):
     cur.execute("select * from Stock_Quantite;")
     return cur.fetchall()
 
@@ -163,11 +163,9 @@ def get_detail_historique(cur):
 
 # permet d'obtenir tout le stock vendu
 @clean_querry
-def get_all_stock_vendu_data(cur):
+def get_all_stock_perime_data(cur):
     cur.execute(
-        """SELECT * 
-        FROM Produit_in_stock 
-        WHERE Produit_in_stock.Etat ='Vendu'; """
+        """SELECT * FROM Produit_in_stock WHERE Etat ='En Stock' AND Date_Peremption < CURRENT_DATE;"""
     )
     return cur.fetchall()
 
