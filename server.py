@@ -12,7 +12,7 @@ from flask_cors import CORS
 from dotenv import dotenv_values
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="./build")
 CORS(app, origins="http://localhost:3000")
 # Si il est mis plus haut la page crash
 from database.database import (
