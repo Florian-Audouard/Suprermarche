@@ -88,7 +88,7 @@ const Account = ({ isLogIn, setIsLogIn, username, setUsername }) => {
 					<div>Nombre de points : {points}</div>
 					<button
 						className="autor"
-						onClick={(_) => navigate("/profile/" + username)}
+						onClick={(_) => navigate("/profile/")}
 					>
 						Voir profile
 					</button>
