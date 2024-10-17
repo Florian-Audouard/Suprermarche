@@ -81,7 +81,6 @@ def add_produit(cur):  # pylint: disable=missing-function-docstring
             },
         )
 
-@clean_querry
 def achat(cur,client, paiement, list_achat):  # pylint: disable=missing-function-docstring
     cur.execute(
         """SELECT transaction(%(client)s,%(paiement)s,%(liste_achat)s);""",
@@ -103,6 +102,7 @@ def add_transaction(cur):  # pylint: disable=missing-function-docstring
         tmp = cur.fetchall()
         list_stock = [x[0] for x in tmp]
         achat(
+            cur,
             client,
             choice(list_paiement),
             sample(
