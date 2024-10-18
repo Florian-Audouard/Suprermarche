@@ -10,6 +10,7 @@ const Profile = () => {
 	const [age, setAge] = useState("age");
 	const [mail, setMail] = useState("mail");
 	const [tel, setTel] = useState("num_tel");
+	const [isLoad, setIsLoad] = useState(false);
 	useEffect(() => {
 		let username = getUsername();
 		let md5Password = getPassword();
@@ -25,25 +26,32 @@ const Profile = () => {
 					return;
 				}
 				let table = data.table[0];
+				console.log(table);
 				setNom(table[1]);
 				setPrenom(table[2]);
 				setPtfidelite(table[3]);
 				setAge(table[4]);
 				setMail(table[5]);
 				setTel(table[6]);
+				setIsLoad(true);
 			});
 	}, []);
 
 	return (
 		<span>
-			<div id="profile">
-				<div>Nom : {nom} </div>
-				<div> Prénom: {prenom} </div>
-				<div> Points: {ptfidelite} </div>
-				<div> Age: {age}</div>
-				<div> Adresse mail: {mail}</div>
-				<div> Numéro de téléphone: {tel}</div>
-			</div>
+			{isLoad ? (
+				<div id="profile">
+					<div>Nom : {nom} </div>
+					<div> Prénom: {prenom} </div>
+					<div> Points: {ptfidelite} </div>
+					<div> Age: {age}</div>
+					<div> Adresse mail: {mail}</div>
+					<div> Numéro de téléphone: {tel}</div>
+				</div>
+			) : (
+				<span></span>
+			)}
+
 			<div>
 				<div id="historique_achat"></div>
 			</div>
