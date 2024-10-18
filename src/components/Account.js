@@ -25,7 +25,6 @@ const Account = ({
 	useEffect(() => {
 		setTextConnection("");
 	}, []);
-
 	const keyInputHandler = (event) => {
 		if (event.key !== "Enter") return;
 		switch (event.target.id) {

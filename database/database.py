@@ -124,7 +124,7 @@ def add_transaction(cur):
 @clean_querry
 def get_profil(cur, username, password):
     if not auth(cur, username, password):
-        return
+        return False
     cur.execute(
         """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel,statut from Client
             WHERE ID = %(username)s;""",
@@ -149,15 +149,15 @@ def get_all_stock(cur):
 
 # permet l'historique des achats := ligneachat
 @clean_querry
-def get_historique_data(cur):
-    cur.execute("select * from Ligne_Achat;")
+def get_historique_data(cur,client):
+    cur.execute("select Num_achat,Date,mode_paiement,sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat,Date,mode_paiement;",{"client": client})
     return cur.fetchall()
 
 
 # permet d'obtenir le detail de l'historique
 @clean_querry
-def get_detail_historique(cur):
-    cur.execute("SELECT * FROM Client_Produit;")
+def get_detail_historique(cur,num_achat):
+    cur.execute("SELECT prix,nom_produit,marque,description,date_peremption FROM Client_Produit WHERE Num_achat=%(num_achat)s;",{"num_achat":num_achat})
     return cur.fetchall()
 
 

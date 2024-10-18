@@ -61,12 +61,12 @@ def get_all_stock_server():
 
 @app.route("/getHistorique", methods=["GET"])
 def get_historique():
-    return jsonify({"table": get_historique_data()})
-
-
-@app.route("/getDetailsHisto", methods=["GET"])
-def get_detail_hist():
-    return jsonify({"table": get_detail_historique()})
+    result=request.getdata()
+    client = json.loads(result.decode("utf-8"))["client"]
+    Table=[]
+    for i in get_historique_data(client):
+        Table.append(i+get_detail_historique(i[0]))
+    return jsonify({"table":Table})
 
 
 @app.route("/getAllStockPerime", methods=["GET"])
