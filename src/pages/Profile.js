@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getUrl } from "../helpers/GetUrl";
 import { getPassword, getUsername } from "../helpers/LogIn";
 import "../styles/Profile.css";
+import Historique from "../components/Historique";
 
 const Profile = () => {
 	const [nom, setNom] = useState("Nom");
@@ -11,6 +12,8 @@ const Profile = () => {
 	const [mail, setMail] = useState("mail");
 	const [tel, setTel] = useState("num_tel");
 	const [isLoad, setIsLoad] = useState(false);
+	const [historique, setHistorique] = useState([]);
+
 	useEffect(() => {
 		let username = getUsername();
 		let md5Password = getPassword();
@@ -26,7 +29,6 @@ const Profile = () => {
 					return;
 				}
 				let table = data.table[0];
-				console.log(table);
 				setNom(table[1]);
 				setPrenom(table[2]);
 				setPtfidelite(table[3]);
@@ -34,6 +36,18 @@ const Profile = () => {
 				setMail(table[5]);
 				setTel(table[6]);
 				setIsLoad(true);
+			});
+		fetch(getUrl() + "/getHistorique", {
+			method: "POST",
+			body: JSON.stringify({ username, password: md5Password }),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.table === "False") {
+					//redirection home
+					return;
+				}
+				setHistorique(data.table);
 			});
 	}, []);
 
@@ -53,7 +67,16 @@ const Profile = () => {
 			)}
 
 			<div>
-				<div id="historique_achat"></div>
+				<div id="historique_achat">
+					{" "}
+					{historique.map((e) => (
+						<Historique
+							key={e[0][0]}
+							histprincipal={e[0]}
+							histdetail={e[1]}
+						></Historique>
+					))}
+				</div>
 			</div>
 		</span>
 		//menu deroulant des achat

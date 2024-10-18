@@ -59,13 +59,13 @@ def get_all_stock_server():
     return jsonify({"table": get_all_stock()})
 
 
-@app.route("/getHistorique", methods=["GET"])
+@app.route("/getHistorique", methods=["POST"])
 def get_historique():
-    result=request.getdata()
-    client = json.loads(result.decode("utf-8"))["client"]
+    result=request.get_data()
+    id = json.loads(result.decode("utf-8"))
     Table=[]
-    for i in get_historique_data(client):
-        Table.append(i+get_detail_historique(i[0]))
+    for i in get_historique_data(id["username"], id["password"]):
+        Table.append((i,get_detail_historique(i[0])))
     return jsonify({"table":Table})
 
 

@@ -149,7 +149,11 @@ def get_all_stock(cur):
 
 # permet l'historique des achats := ligneachat
 @clean_querry
-def get_historique_data(cur,client):
+def get_historique_data(cur,id,password):
+    if not auth(cur, id, password):
+        return False
+    cur.execute("SELECT Num_client FROM Client WHERE ID=%(id)s",{"id": id})
+    client = cur.fetchall()[0][0]
     cur.execute("select Num_achat,Date,mode_paiement,sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat,Date,mode_paiement;",{"client": client})
     return cur.fetchall()
 
