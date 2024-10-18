@@ -77,7 +77,7 @@ def init_data(cur):
 
 
 @clean_querry
-def add_produit(cur):
+def add_produit_init(cur):
     cur.execute("""SELECT Num_Description FROM Description;""")
     list_produit = cur.fetchall()
     list_produit = [x[0] for x in list_produit]
@@ -170,6 +170,16 @@ def get_all_stock_perime_data(cur):
     return cur.fetchall()
 
 
+@clean_querry
+def change_stock_retire(cur, num_produit):
+    cur.execute(
+        """UPDATE stock
+            SET Etat = 'Retire'
+            WHERE Num_Produit = %(num_produit)s;""",
+        {"num_produit": num_produit},
+    )
+
+
 def auth(cur, username, password):
     cur.execute(
         "SELECT count(ID) FROM Client WHERE ID = %(username)s AND MDP = %(password)s;",
@@ -185,8 +195,16 @@ def connection(cur, username, password):
     return auth(cur, username, password)
 
 
+@clean_querry
+def add_produit(cur, numero, quantite):
+    cur.execute(
+        """SELECT restock_fixe(%(num_produit)s,%(quantite)s);""",
+        {"num_produit": numero, "quantite": quantite},
+    )
+
+
 if __name__ == "__main__":
     reset_table()
     init_data()
-    add_produit()
+    add_produit_init()
     add_transaction()

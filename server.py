@@ -16,6 +16,7 @@ app = Flask(__name__, static_folder="./build")
 CORS(app, origins="http://localhost:3000")
 # Si il est mis plus haut la page crash
 from database.database import (
+    add_produit,
     get_data,
     get_profil,
     get_stock_dispo,
@@ -24,6 +25,7 @@ from database.database import (
     get_detail_historique,
     get_all_stock_perime_data,
     connection,
+    change_stock_retire,
 )
 
 
@@ -77,6 +79,22 @@ def log_in():
     result = request.get_data()
     id = json.loads(result.decode("utf-8"))
     return jsonify(str(connection(id["username"], id["password"])))
+
+
+@app.route("/RetireStock", methods=["POST"])
+def change_stock_retire_server():
+    result = request.get_data()
+    num_produit = json.loads(result.decode("utf-8"))["numProduit"]
+    change_stock_retire(num_produit)
+    return "ok"
+
+
+@app.route("/AjoutStock", methods=["POST"])
+def add_stock_server():
+    result = request.get_data()
+    arg = json.loads(result.decode("utf-8"))
+    add_produit(arg["numProduit"], arg["quantite"])
+    return "ok"
 
 
 ENV_FILENAME = ".env"
