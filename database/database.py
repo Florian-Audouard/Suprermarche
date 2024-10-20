@@ -90,10 +90,15 @@ def add_produit_init(cur):
         )
 
 
-def achat(cur, client, paiement, list_achat):
+def achat(cur, client, paiement, list_achat, nb_jour):
     cur.execute(
-        """SELECT transaction(%(client)s,%(paiement)s,%(liste_achat)s);""",
-        {"client": client, "paiement": paiement, "liste_achat": list_achat},
+        """SELECT transaction(%(client)s,%(paiement)s,%(liste_achat)s,CURRENT_DATE + interval '1 day' * %(nombre_jours)s);""",
+        {
+            "client": client,
+            "paiement": paiement,
+            "liste_achat": list_achat,
+            "nombre_jours": -nb_jour,
+        },
     )
 
 
@@ -106,18 +111,20 @@ def add_transaction(cur):
     tmp = cur.fetchall()
     list_paiement = [x[0] for x in tmp]
     for client in list_cli:
-        cur.execute("""SELECT num_description FROM Stock_Quantite_Disponible """)
-        tmp = cur.fetchall()
-        list_stock = [x[0] for x in tmp]
-        achat(
-            cur,
-            client,
-            choice(list_paiement),
-            sample(
-                list_stock,
-                randint(int(len(list_stock) / 8), int(len(list_stock) / 2)),
-            ),
-        )
+        for i in range(randint(1, 5)):
+            cur.execute("""SELECT num_description FROM Stock_Quantite_Disponible """)
+            tmp = cur.fetchall()
+            list_stock = [x[0] for x in tmp]
+            achat(
+                cur,
+                client,
+                choice(list_paiement),
+                sample(
+                    list_stock,
+                    randint(len(list_stock) // 16, len(list_stock) // 8),
+                ),
+                i,
+            )
 
 
 # permet d'obtenir toutes les informations du clients or mdp et login
@@ -147,25 +154,36 @@ def get_all_stock(cur):
     return cur.fetchall()
 
 
-# permet l'historique des achats := ligneachat
-@clean_querry
-def get_historique_data(cur,id,password):
-    if not auth(cur, id, password):
-        return False
-    cur.execute("SELECT Num_client FROM Client WHERE ID=%(id)s",{"id": id})
+# permet l'historique des achats (prix total d'un transaction)
+def get_historique_data(cur, id):
+    cur.execute("SELECT Num_client FROM Client WHERE ID=%(id)s", {"id": id})
     client = cur.fetchall()[0][0]
-    cur.execute("select Num_achat,Date,mode_paiement,sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat,Date,mode_paiement;",{"client": client})
+    cur.execute(
+        "select Num_achat,Date,mode_paiement,sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat,Date,mode_paiement;",
+        {"client": client},
+    )
     return cur.fetchall()
 
 
-# permet d'obtenir le detail de l'historique
+# permet d'obtenir le detail de d'une transaction
+def get_detail_historique(cur, num_achat):
+    cur.execute(
+        "SELECT prix,nom_produit,marque,description,date_peremption FROM Client_Produit WHERE Num_achat=%(num_achat)s;",
+        {"num_achat": num_achat},
+    )
+    return cur.fetchall()
+
+
 @clean_querry
-def get_detail_historique(cur,num_achat):
-    cur.execute("SELECT prix,nom_produit,marque,description,date_peremption FROM Client_Produit WHERE Num_achat=%(num_achat)s;",{"num_achat":num_achat})
-    return cur.fetchall()
+def get_historique(cur, username, password):
+    if not auth(cur, username, password):
+        return False
+    table = []
+    for i in get_historique_data(cur, username):
+        table.append((i, get_detail_historique(cur, i[0])))
+    return table
 
 
-# permet d'obtenir tout le stock vendu
 @clean_querry
 def get_all_stock_perime_data(cur):
     cur.execute(

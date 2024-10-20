@@ -21,8 +21,7 @@ from database.database import (
     get_profil,
     get_stock_dispo,
     get_all_stock,
-    get_historique_data,
-    get_detail_historique,
+    get_historique,
     get_all_stock_perime_data,
     connection,
     change_stock_retire,
@@ -60,13 +59,10 @@ def get_all_stock_server():
 
 
 @app.route("/getHistorique", methods=["POST"])
-def get_historique():
-    result=request.get_data()
+def get_historique_server():
+    result = request.get_data()
     id = json.loads(result.decode("utf-8"))
-    Table=[]
-    for i in get_historique_data(id["username"], id["password"]):
-        Table.append((i,get_detail_historique(i[0])))
-    return jsonify({"table":Table})
+    return jsonify({"table": get_historique(id["username"], id["password"])})
 
 
 @app.route("/getAllStockPerime", methods=["GET"])

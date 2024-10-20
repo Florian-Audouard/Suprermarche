@@ -61,13 +61,13 @@ CREATE OR REPLACE FUNCTION get_stock_Num(NumDescription stock.Num_Description%TY
     SELECT num_produit FROM Stock WHERE NumDescription = Num_Description AND Etat = 'En Stock' AND Date_Peremption > CURRENT_DATE LIMIT 1;
 $$;
 
-CREATE OR REPLACE FUNCTION transaction(client client.Num_Client%TYPE,paiement paiement.Num_Paiement%TYPE,liste_produit integer[]) RETURNS void LANGUAGE PLPGSQL AS $$
+CREATE OR REPLACE FUNCTION transaction(client client.Num_Client%TYPE,paiement paiement.Num_Paiement%TYPE,liste_produit integer[],date_transaction timestamp) RETURNS void LANGUAGE PLPGSQL AS $$
     DECLARE
         result  Achat.Num_Achat%TYPE;
         num_produit INT;
     BEGIN
         INSERT INTO Achat (Num_Client,Date,Num_Paiement) VALUES
-            (client,CURRENT_DATE,paiement) RETURNING Num_Achat into result;
+            (client,date_transaction,paiement) RETURNING Num_Achat into result;
         FOREACH num_produit IN ARRAY liste_produit LOOP
             INSERT INTO Ligne_Achat VALUES (get_stock_Num(num_produit),result);
         END LOOP;
