@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setCookie } from "../helpers/LogIn";
-import { disconnect } from "../helpers/Disconnect";
+import { setAccount, disconnect } from "../helpers/LogIn";
 import "../styles/Account.css";
 import md5 from "md5";
 import { getUrl } from "../helpers/GetUrl";
@@ -15,6 +14,8 @@ const Account = ({
 	prenom,
 	points,
 	isAdmin,
+	setIsAdmin,
+	setIsLoad,
 }) => {
 	const [password, setPassword] = useState("");
 	const [textConnection, setTextConnection] = useState("");
@@ -56,8 +57,7 @@ const Account = ({
 			.then((data) => {
 				if (data === "True") {
 					setTextConnection("");
-					setCookie("username", username);
-					setCookie("password", md5Password);
+					setAccount(username, md5Password);
 					setIsLogIn(true);
 				} else {
 					setTextConnection(
@@ -89,6 +89,7 @@ const Account = ({
 							>
 								Voir profile
 							</button>
+							<button>Voir Panier</button>
 						</span>
 					) : (
 						<span></span>
@@ -97,7 +98,9 @@ const Account = ({
 					<button
 						onClick={(_) => {
 							disconnect();
-							setIsLogIn(false);
+							setIsLogIn("");
+							setIsAdmin(false);
+							setIsLoad(false);
 						}}
 					>
 						Se déconnecter

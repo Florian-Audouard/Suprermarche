@@ -7,23 +7,25 @@ import { getUrl } from "../helpers/GetUrl";
 import Presentation from "../components/Presentation";
 
 const Home = () => {
-	const [isLogIn, setIsLogIn] = useState(false);
+	const [isLogIn, setIsLogIn] = useState("");
 	const [username, setUsername] = useState("");
 	const [nom, setNom] = useState("");
 	const [prenom, setPrenom] = useState("");
 	const [points, setPoints] = useState("");
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isLoad, setIsLoad] = useState(false);
-
 	useEffect(() => {
 		logIn(setIsLogIn, setUsername);
 		setIsLoad(false);
+		setIsAdmin(false);
 	}, []);
 	useEffect(() => {
-		if (username === "" || username === undefined) return;
+		if (isLogIn !== false && isLogIn !== true) return;
+		if (isLogIn === false) {
+			setIsLoad(true);
+			return;
+		}
 		let md5Password = getPassword();
-
-		if (md5Password === "" || md5Password === undefined) return;
 
 		fetch(getUrl() + "/getProfilClient", {
 			method: "POST",
@@ -51,6 +53,8 @@ const Home = () => {
 				prenom={prenom}
 				points={points}
 				isAdmin={isAdmin}
+				setIsAdmin={setIsAdmin}
+				setIsLoad={setIsLoad}
 			/>
 			{isLoad ? (
 				isLogIn ? (

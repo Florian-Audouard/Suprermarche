@@ -3,6 +3,7 @@ import { getUrl } from "../helpers/GetUrl";
 import { getPassword, getUsername } from "../helpers/LogIn";
 import "../styles/Profile.css";
 import Historique from "../components/Historique";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
 	const [nom, setNom] = useState("Nom");
@@ -13,6 +14,7 @@ const Profile = () => {
 	const [tel, setTel] = useState("num_tel");
 	const [isLoad, setIsLoad] = useState(false);
 	const [historique, setHistorique] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		let username = getUsername();
@@ -24,8 +26,8 @@ const Profile = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.table === "False") {
-					//redirection home
+				if (data.table === false) {
+					navigate("/");
 					return;
 				}
 				let table = data.table[0];
@@ -43,16 +45,19 @@ const Profile = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.table === "False") {
-					//redirection home
+				if (data.table === false) {
+					navigate("/");
 					return;
 				}
 				setHistorique(data.table);
 			});
-	}, []);
+	}, [navigate]);
 
 	return (
 		<span>
+			<span className="clickable" onClick={(_) => navigate("/")}>
+				Page d'accueil
+			</span>
 			{isLoad ? (
 				<div id="profile">
 					<div>Nom : {nom} </div>
@@ -69,7 +74,7 @@ const Profile = () => {
 			<div>
 				<div id="historique_achat">
 					{" "}
-					{historique.map((e) => (
+					{historique?.map((e) => (
 						<Historique
 							key={e[0][0]}
 							histprincipal={e[0]}
