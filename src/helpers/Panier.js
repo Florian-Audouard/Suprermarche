@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from "./Cookie";
+import { eraseCookie, getCookie, setCookie } from "./Cookie";
 
 export function getPanierCookie() {
 	try {
@@ -10,4 +10,8 @@ export function getPanierCookie() {
 
 export function setPanierCookie(panier) {
 	setCookie("panier", JSON.stringify(panier));
+}
+
+export function delPanier() {
+	eraseCookie("panier");
 }

@@ -16,7 +16,7 @@ const ArticleAchat = ({
 	function ajoutPanier() {
 		setAjoutQuantite(0);
 		if (ajoutQuantite === 0) return;
-		fonctionAjout(numero, ajoutQuantite);
+		fonctionAjout(numero, nom, marque, description, prix, ajoutQuantite);
 	}
 	return (
 		<div>

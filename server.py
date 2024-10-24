@@ -25,6 +25,7 @@ from database.database import (
     get_all_stock_perime_data,
     connection,
     change_stock_retire,
+    transaction,
 )
 
 
@@ -91,6 +92,16 @@ def add_stock_server():
     arg = json.loads(result.decode("utf-8"))
     add_produit(arg["numProduit"], arg["quantite"])
     return "ok"
+
+
+@app.route("/Transaction", methods=["POST"])
+def transaction_server():
+    result = request.get_data()
+    arg = json.loads(result.decode("utf-8"))
+    print(arg["listeProduit"])
+    return jsonify(
+        str(transaction(arg["username"], arg["password"], arg["listeProduit"]))
+    )
 
 
 ENV_FILENAME = ".env"

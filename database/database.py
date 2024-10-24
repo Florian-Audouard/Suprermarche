@@ -48,8 +48,9 @@ def clean_querry(func):
             with conn:
                 with conn.cursor() as cur:
                     res = func(cur, *args, **kwargs)
-        except Exception as e: # pylint:disable=broad-exception-caught
+        except Exception as e:  # pylint:disable=broad-exception-caught
             print(e)
+            res = False
         finally:
             conn.close()
         return res
@@ -113,7 +114,8 @@ def add_transaction(cur):
     tmp = cur.fetchall()
     list_paiement = [x[0] for x in tmp]
     for client in list_cli:
-        for i in range(randint(1, 5)):
+        nb = randint(1, 5)
+        for i in range(nb):
             cur.execute("""SELECT num_description FROM Stock_Quantite_Disponible """)
             tmp = cur.fetchall()
             list_stock = [x[0] for x in tmp]
@@ -125,7 +127,7 @@ def add_transaction(cur):
                     list_stock,
                     randint(len(list_stock) // 16, len(list_stock) // 8),
                 ),
-                i,
+                nb - i,
             )
 
 
@@ -161,7 +163,7 @@ def get_historique_data(cur, id):
     cur.execute("SELECT Num_client FROM Client WHERE ID=%(id)s", {"id": id})
     client = cur.fetchall()[0][0]
     cur.execute(
-        "select Num_achat,Date,mode_paiement,sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat,Date,mode_paiement;",
+        "select Num_achat, Date, mode_paiement, sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat, Date, mode_paiement ORDER BY Num_achat DESC;",
         {"client": client},
     )
     return cur.fetchall()
@@ -225,6 +227,21 @@ def add_produit(cur, numero, quantite):
         """SELECT restock_fixe(%(num_produit)s,%(quantite)s);""",
         {"num_produit": numero, "quantite": quantite},
     )
+
+
+@clean_querry
+def transaction(cur, username, password, liste_produit):
+    if not auth(cur, username, password):
+        return False
+    cur.execute(
+        """SELECT num_client FROM Client WHERE ID=%(username)s; """,
+        {"username": username},
+    )
+    client = cur.fetchall()[0][0]
+    liste_produit = [int(x) for x in liste_produit]
+    achat(cur, client, 1, liste_produit, 0)
+
+    return True
 
 
 if __name__ == "__main__":

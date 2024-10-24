@@ -14,14 +14,11 @@ const Client = () => {
 				setArticleTab(data.table);
 			});
 	}, []);
-	useEffect(() => {
-		console.log(panier);
-	}, [panier]);
-	function ajoutPanier(numero, quantite) {
+	function ajoutPanier(numero, nom, marque, description, prix, quantite) {
 		const tmpPanier = structuredClone(panier);
 		numero = numero.toString();
 		if (numero in tmpPanier) return;
-		tmpPanier[numero] = quantite;
+		tmpPanier[numero] = { nom, marque, description, prix, quantite };
 		setPanier(tmpPanier);
 		setPanierCookie(tmpPanier);
 	}

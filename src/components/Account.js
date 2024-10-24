@@ -89,7 +89,9 @@ const Account = ({
 							>
 								Voir profile
 							</button>
-							<button>Voir Panier</button>
+							<button onClick={(_) => navigate("/panier")}>
+								Voir Panier
+							</button>
 						</span>
 					) : (
 						<span></span>

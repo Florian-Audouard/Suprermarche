@@ -22,6 +22,7 @@ export function logIn(setIsLogIn, setUsername) {
 				setUsername(localUsername);
 			} else {
 				setIsLogIn(false);
+				disconnect();
 			}
 		});
 }
