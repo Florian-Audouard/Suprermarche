@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../styles/ArticleClient.css";
 
 const ArticleAchat = ({
 	numero,
@@ -8,6 +9,7 @@ const ArticleAchat = ({
 	quantite,
 	description,
 	fonctionAjout,
+	nombrePanier,
 }) => {
 	const [ajoutQuantite, setAjoutQuantite] = useState(0);
 	useEffect(() => {
@@ -15,21 +17,32 @@ const ArticleAchat = ({
 	}, []);
 	function ajoutPanier() {
 		setAjoutQuantite(0);
-		if (ajoutQuantite === 0) return;
 		fonctionAjout(numero, nom, marque, description, prix, ajoutQuantite);
 	}
 	return (
-		<div>
-			{numero} {marque} {nom} {prix} {quantite} {description}
+		<span className="articleClient border">
+			<div>
+				{nom} {marque}
+			</div>
+			<div className="descriptionArticleClient">{description}</div>
+			<div>{prix}€</div>
+			<div>Quantité disponible: {quantite}</div>
+			{nombrePanier !== 0 ? (
+				<div>Quantité dans le panier : {nombrePanier}</div>
+			) : (
+				<div className="videPanier">e</div>
+			)}
 			<input
 				type="number"
 				onChange={(e) => setAjoutQuantite(e.target.value)}
 				value={ajoutQuantite}
 				min={0}
-				max={quantite}
+				max={quantite - nombrePanier}
 			></input>
-			<button onClick={ajoutPanier}>Ajouter au panier</button>
-		</div>
+			<div className="button" onClick={ajoutPanier}>
+				Ajouter au panier
+			</div>
+		</span>
 	);
 };
 export default ArticleAchat;

@@ -4,6 +4,7 @@ import { setAccount, disconnect } from "../helpers/LogIn";
 import "../styles/Account.css";
 import md5 from "md5";
 import { getUrl } from "../helpers/GetUrl";
+import { getPanierCookie } from "../helpers/Panier";
 
 const Account = ({
 	isLogIn,
@@ -16,9 +17,11 @@ const Account = ({
 	isAdmin,
 	setIsAdmin,
 	setIsLoad,
+	panierChange,
 }) => {
 	const [password, setPassword] = useState("");
 	const [textConnection, setTextConnection] = useState("");
+	const [panierText, setPanierText] = useState({});
 
 	const input2 = useRef(null);
 	const navigate = useNavigate();
@@ -26,6 +29,27 @@ const Account = ({
 	useEffect(() => {
 		setTextConnection("");
 	}, []);
+	useEffect(() => {
+		const panier = getPanierCookie();
+		if (Object.keys(panier).length === 0) {
+			setPanierText("Votre panier est vide");
+			return;
+		}
+
+		let totalQuantite = 0;
+		let totalPrix = 0;
+		for (const key in panier) {
+			totalQuantite += parseInt(panier[key].quantite);
+			totalPrix += panier[key].prix * panier[key].quantite;
+		}
+		setPanierText(
+			"Nombre d'articles : " +
+				totalQuantite +
+				" Prix total : " +
+				totalPrix +
+				"€"
+		);
+	}, [panierChange]);
 	const keyInputHandler = (event) => {
 		if (event.key !== "Enter") return;
 		switch (event.target.id) {
@@ -73,8 +97,9 @@ const Account = ({
 			input2.current.type = "password";
 		}
 	};
+
 	return (
-		<div id="account">
+		<div id="account" className="border">
 			{isLogIn ? (
 				<div>
 					<div>
@@ -83,21 +108,26 @@ const Account = ({
 					{!isAdmin ? (
 						<span>
 							<div>Nombre de points : {points}</div>
-							<button
-								className="profile"
+							<div>{panierText}</div>
+							<div
+								className="button"
 								onClick={(_) => navigate("/profile/")}
 							>
 								Voir profile
-							</button>
-							<button onClick={(_) => navigate("/panier")}>
+							</div>
+							<div
+								className="button"
+								onClick={(_) => navigate("/panier")}
+							>
 								Voir Panier
-							</button>
+							</div>
 						</span>
 					) : (
 						<span></span>
 					)}
 
-					<button
+					<div
+						className="button"
 						onClick={(_) => {
 							disconnect();
 							setIsLogIn("");
@@ -106,7 +136,7 @@ const Account = ({
 						}}
 					>
 						Se déconnecter
-					</button>
+					</div>
 				</div>
 			) : (
 				<div id="connectionBlock">

@@ -14,10 +14,12 @@ const Home = () => {
 	const [points, setPoints] = useState("");
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isLoad, setIsLoad] = useState(false);
+	const [panierChange, setPanierChange] = useState(false);
 	useEffect(() => {
 		logIn(setIsLogIn, setUsername);
 		setIsLoad(false);
 		setIsAdmin(false);
+		setPanierChange(0);
 	}, []);
 	useEffect(() => {
 		if (isLogIn !== false && isLogIn !== true) return;
@@ -55,13 +57,17 @@ const Home = () => {
 				isAdmin={isAdmin}
 				setIsAdmin={setIsAdmin}
 				setIsLoad={setIsLoad}
+				panierChange={panierChange}
 			/>
 			{isLoad ? (
 				isLogIn ? (
 					isAdmin ? (
 						<Admin />
 					) : (
-						<Client />
+						<Client
+							setPanierChange={setPanierChange}
+							panierChange={panierChange}
+						/>
 					)
 				) : (
 					<Presentation />

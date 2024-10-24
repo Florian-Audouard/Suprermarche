@@ -1,4 +1,37 @@
+html{
+    min-height: 100%;
+    scroll-behavior: smooth;
+
+}
+body {
+    background-image: linear-gradient(to top, #001900, #001500, #001100, #000c00, #000500);
+    color: white;
+    font-family: "Raleway", serif;
+}
+
 .clickable{
     cursor: pointer;
     user-select: none
+}
+.button{
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+    background-color: rgba(10,75,10,0.75) ;
+    border: solid 1px rgb(0,255,150);
+    border-radius: 5px;
+    transition: 0.5s ;
+    box-shadow: 0 0 5px rgb(0,255,150);
+    padding: 5px;
+}
+.button:hover{
+    transform: scale(1.1);
+    background-color: rgba(10,100,10,0.75) ;
+    box-shadow: 0 0 10px rgb(0,255,150);;
+}
+
+.border{
+    border: solid 1px rgb(0,255,150);
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgb(0,255,150);
 }
