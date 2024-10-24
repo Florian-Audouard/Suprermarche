@@ -6,8 +6,8 @@
 # pylint:disable=wrong-import-position
 # pylint:disable=line-too-long
 import os
-from flask import Flask, jsonify, send_from_directory, request
 import json
+from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 from dotenv import dotenv_values
 
@@ -98,10 +98,7 @@ ENV_FILENAME = ".env"
 
 def main():
     os.chdir(os.path.dirname(__file__))
-    port = 80
-    if os.path.exists(ENV_FILENAME):
-        config = dotenv_values(ENV_FILENAME)
-        port = int(config["PORT"])
+    port = 2500
     app.run(host="0.0.0.0", port=port)
 
 
