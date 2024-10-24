@@ -48,6 +48,8 @@ def clean_querry(func):
             with conn:
                 with conn.cursor() as cur:
                     res = func(cur, *args, **kwargs)
+        except Exception as e: # pylint:disable=broad-exception-caught
+            print(e)
         finally:
             conn.close()
         return res
