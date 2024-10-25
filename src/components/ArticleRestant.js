@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ArticleQuantite from "./ArticleQuantite";
-import { FaCheck } from "react-icons/fa";
 import { getUrl } from "../helpers/GetUrl";
+import MyInput from "./MyInput";
 const ArticleRestant = ({
 	numero,
 	nom,
@@ -29,7 +29,7 @@ const ArticleRestant = ({
 	}
 
 	return (
-		<div>
+		<span className="articleBox border">
 			<ArticleQuantite
 				nom={nom}
 				marque={marque}
@@ -37,14 +37,18 @@ const ArticleRestant = ({
 				description={description}
 				quantite={quantite}
 			></ArticleQuantite>
-			<input
-				type="number"
-				onChange={(e) => setAjoutQuantite(e.target.value)}
-				value={ajoutQuantite}
-				min={0}
-			></input>
-			<FaCheck className="clickable" onClick={addStock} />
-		</div>
+			<div id="containerInput">
+				<MyInput
+					min={0}
+					value={ajoutQuantite}
+					setValue={setAjoutQuantite}
+					max={100}
+				/>
+				<span onClick={addStock} className="button">
+					Ajouter au stock
+				</span>
+			</div>
+		</span>
 	);
 };
 export default ArticleRestant;

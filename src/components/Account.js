@@ -1,34 +1,80 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setAccount, disconnect } from "../helpers/LogIn";
-import "../styles/Account.css";
+import { setAccount, disconnect, getPassword, logIn } from "../helpers/LogIn";
 import md5 from "md5";
 import { getUrl } from "../helpers/GetUrl";
-import { getPanierCookie } from "../helpers/Panier";
+import { delPanier, getPanierCookie } from "../helpers/Panier";
+import "../styles/components/Account.css";
 
 const Account = ({
-	isLogIn,
-	setIsLogIn,
-	username,
-	setUsername,
-	nom,
-	prenom,
-	points,
-	isAdmin,
-	setIsAdmin,
-	setIsLoad,
-	panierChange,
+	setIsLoadParents,
+	setIsLogInParents,
+	setIsAdminParents,
+	setPanierChangeParents,
+	panierChangeParents,
+	setChoiceAdmin,
 }) => {
+	const [panierChange, setPanierChange] = useState(0);
+	const [isLoad, setIsLoad] = useState(false);
+	const [isLogIn, setIsLogIn] = useState("");
+	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [isAdmin, setIsAdmin] = useState("");
 	const [textConnection, setTextConnection] = useState("");
 	const [panierText, setPanierText] = useState({});
-
+	const [nom, setNom] = useState("");
+	const [prenom, setPrenom] = useState("");
+	const [points, setPoints] = useState("");
 	const input2 = useRef(null);
 	const navigate = useNavigate();
+	useEffect(() => {
+		setPanierChange(panierChangeParents);
+	}, [panierChangeParents]);
+	useEffect(() => {
+		setPanierChangeParents(panierChange);
+	}, [panierChange, setPanierChangeParents]);
+	useEffect(() => {
+		setIsLoadParents(isLoad);
+	}, [isLoad, setIsLoadParents]);
+	useEffect(() => {
+		setIsLogInParents(isLogIn);
+	}, [isLogIn, setIsLogInParents]);
+	useEffect(() => {
+		setIsAdminParents(isAdmin);
+	}, [isAdmin, setIsAdminParents]);
 
 	useEffect(() => {
+		setIsLoad(false);
+		setIsAdmin(false);
+		logIn(setIsLogIn, setUsername);
 		setTextConnection("");
 	}, []);
+	useEffect(() => {
+		if (isLogIn === false || isLogIn === true) return;
+		logIn(setIsLogIn, setUsername);
+	}, [isLoad, isLogIn]);
+	useEffect(() => {
+		if (isLogIn !== false && isLogIn !== true) return;
+		if (isLogIn === false) {
+			setIsLoad(true);
+			return;
+		}
+		let md5Password = getPassword();
+
+		fetch(getUrl() + "/getProfilClient", {
+			method: "POST",
+			body: JSON.stringify({ username, password: md5Password }),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				let table = data.table[0];
+				setNom(table[1]);
+				setPrenom(table[2]);
+				setPoints(table[3]);
+				setIsAdmin(table[7] === "Admin");
+				setIsLoad(true);
+			});
+	}, [username, isLogIn]);
 	useEffect(() => {
 		const panier = getPanierCookie();
 		if (Object.keys(panier).length === 0) {
@@ -42,6 +88,7 @@ const Account = ({
 			totalQuantite += parseInt(panier[key].quantite);
 			totalPrix += panier[key].prix * panier[key].quantite;
 		}
+		totalPrix = totalPrix.toFixed(2);
 		setPanierText(
 			"Nombre d'articles : " +
 				totalQuantite +
@@ -108,22 +155,58 @@ const Account = ({
 					{!isAdmin ? (
 						<span>
 							<div>Nombre de points : {points}</div>
-							<div>{panierText}</div>
+							<div>{panierText} </div>
+							{Object.keys(getPanierCookie()).length !== 0 ? (
+								<span>
+									<div
+										className="button"
+										onClick={(_) => {
+											delPanier();
+											setPanierChange((e) => e + 1);
+										}}
+									>
+										Supprimer le panier
+									</div>
+									<div
+										className="button"
+										onClick={(_) => navigate("/panier")}
+									>
+										Voir Panier
+									</div>
+								</span>
+							) : (
+								<></>
+							)}
+
 							<div
 								className="button"
 								onClick={(_) => navigate("/profile/")}
 							>
 								Voir profile
 							</div>
+
 							<div
 								className="button"
-								onClick={(_) => navigate("/panier")}
+								onClick={(_) => navigate("/")}
 							>
-								Voir Panier
+								Page d'acceuil
 							</div>
 						</span>
 					) : (
-						<span></span>
+						<span>
+							<div
+								className="button"
+								onClick={(_) => setChoiceAdmin("restant")}
+							>
+								Voir les stocks restants
+							</div>
+							<div
+								className="button"
+								onClick={(_) => setChoiceAdmin("perime")}
+							>
+								Voir les stocks perimé
+							</div>
+						</span>
 					)}
 
 					<div

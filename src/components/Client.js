@@ -15,6 +15,9 @@ const Client = ({ panierChange, setPanierChange }) => {
 				setArticleTab(data.table);
 			});
 	}, []);
+	useEffect(() => {
+		setPanier(getPanierCookie());
+	}, [panierChange]);
 	function ajoutPanier(numero, nom, marque, description, prix, quantite) {
 		const tmpPanier = structuredClone(panier);
 		numero = numero.toString();
@@ -24,6 +27,14 @@ const Client = ({ panierChange, setPanierChange }) => {
 		} else {
 			tmpPanier[numero] = { nom, marque, description, prix, quantite };
 		}
+		setPanier(tmpPanier);
+		setPanierCookie(tmpPanier);
+		setPanierChange(panierChange + 1);
+	}
+
+	function deleteArticlePanier(numero) {
+		const tmpPanier = structuredClone(panier);
+		delete tmpPanier[numero];
 		setPanier(tmpPanier);
 		setPanierCookie(tmpPanier);
 		setPanierChange(panierChange + 1);
@@ -41,6 +52,7 @@ const Client = ({ panierChange, setPanierChange }) => {
 					quantite={e[9]}
 					fonctionAjout={ajoutPanier}
 					nombrePanier={panier[e[0]] ? panier[e[0]].quantite : 0}
+					deleteArticlePanier={deleteArticlePanier}
 				></ArticleAchat>
 			))}
 		</div>

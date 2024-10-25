@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ArticlePanier from "../components/ArticlePanier";
 import { getPassword, logIn } from "../helpers/LogIn";
 import { getUrl } from "../helpers/GetUrl";
+import Account from "../components/Account";
 
 const Panier = () => {
 	const navigate = useNavigate();
@@ -52,22 +53,19 @@ const Panier = () => {
 	}
 	return (
 		<div>
-			<span className="clickable" onClick={(_) => navigate("/")}>
-				Page d'accueil
-			</span>
-			<h1>Panier</h1>
-			<button
-				onClick={(_) => {
-					delPanier();
-					setChangePanier(changePanier + 1);
-				}}
-			>
-				Supprimer le panier
-			</button>
+			<Account
+				setIsLogInParents={setIsLogIn}
+				setIsLoadParents={(_) => {}}
+				setIsAdminParents={(_) => {}}
+				setPanierChangeParents={setChangePanier}
+				panierChange={changePanier}
+				setChoiceAdmin={(_) => {}}
+			></Account>
 			{Object.keys(panier).length === 0 ? (
 				<div>Votre panier est vide.</div>
 			) : (
 				<>
+					<h1>Panier</h1>
 					{Object.entries(panier).map(([key, value]) => (
 						<ArticlePanier
 							key={key}

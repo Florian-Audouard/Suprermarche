@@ -4,6 +4,7 @@ import { getPassword, getUsername } from "../helpers/LogIn";
 import "../styles/Profile.css";
 import Historique from "../components/Historique";
 import { useNavigate } from "react-router-dom";
+import Account from "../components/Account";
 
 const Profile = () => {
 	const [nom, setNom] = useState("Nom");
@@ -55,9 +56,14 @@ const Profile = () => {
 
 	return (
 		<span>
-			<span className="clickable" onClick={(_) => navigate("/")}>
-				Page d'accueil
-			</span>
+			<Account
+				setIsLogInParents={(_) => {}}
+				setIsLoadParents={(_) => {}}
+				setIsAdminParents={(_) => {}}
+				setChoiceAdmin={(_) => {}}
+				setPanierChangeParents={(_) => {}}
+				panierChange={0}
+			></Account>
 			{isLoad ? (
 				<div id="profile">
 					<div>Nom : {nom} </div>

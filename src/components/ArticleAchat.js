@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "../styles/ArticleClient.css";
+import "../styles/components/ArticleAchat.css";
+import { RxCross2 } from "react-icons/rx";
+import MyInput from "./MyInput";
 
 const ArticleAchat = ({
 	numero,
@@ -10,6 +12,7 @@ const ArticleAchat = ({
 	description,
 	fonctionAjout,
 	nombrePanier,
+	deleteArticlePanier,
 }) => {
 	const [ajoutQuantite, setAjoutQuantite] = useState(0);
 	useEffect(() => {
@@ -19,8 +22,11 @@ const ArticleAchat = ({
 		setAjoutQuantite(0);
 		fonctionAjout(numero, nom, marque, description, prix, ajoutQuantite);
 	}
+	function deleteArticle() {
+		deleteArticlePanier(numero);
+	}
 	return (
-		<span className="articleClient border">
+		<span className="articleBox border">
 			<div>
 				{nom} {marque}
 			</div>
@@ -28,19 +34,26 @@ const ArticleAchat = ({
 			<div>{prix}€</div>
 			<div>Quantité disponible: {quantite}</div>
 			{nombrePanier !== 0 ? (
-				<div>Quantité dans le panier : {nombrePanier}</div>
+				<div className="containerCross">
+					Quantité dans le panier : {nombrePanier}
+					<RxCross2
+						className="clickable cross"
+						onClick={deleteArticle}
+					/>
+				</div>
 			) : (
-				<div className="videPanier">e</div>
+				<div className="videPanier"> </div>
 			)}
-			<input
-				type="number"
-				onChange={(e) => setAjoutQuantite(e.target.value)}
-				value={ajoutQuantite}
-				min={0}
-				max={quantite - nombrePanier}
-			></input>
-			<div className="button" onClick={ajoutPanier}>
-				Ajouter au panier
+			<div id="containerInput">
+				<MyInput
+					max={quantite - nombrePanier}
+					setValue={setAjoutQuantite}
+					value={ajoutQuantite}
+					min={0}
+				/>
+				<div className="button" id="buttonInline" onClick={ajoutPanier}>
+					Ajouter au panier
+				</div>
 			</div>
 		</span>
 	);

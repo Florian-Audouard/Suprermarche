@@ -15,3 +15,9 @@ export function setPanierCookie(panier) {
 export function delPanier() {
 	eraseCookie("panier");
 }
+
+export function deleteArticlePanier(numero) {
+	const panier = getPanierCookie();
+	delete panier[numero];
+	setPanierCookie(panier);
+}

@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export function setCookie(cname, cvalue) {
 	const date = new Date();
 	date.setFullYear(date.getFullYear() + 100);
@@ -7,19 +9,7 @@ export function setCookie(cname, cvalue) {
 }
 
 export function getCookie(cname) {
-	let name = cname + "=";
-	let decodedCookie = decodeURIComponent(document.cookie);
-	let ca = decodedCookie.split(";");
-	for (let i = 0; i < ca.length; i++) {
-		let c = ca[i];
-		while (c.charAt(0) === " ") {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) === 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return "";
+	return Cookies.get(cname);
 }
 export function eraseCookie(name) {
 	const date = new Date();

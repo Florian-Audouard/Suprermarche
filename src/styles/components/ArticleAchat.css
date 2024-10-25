@@ -1,0 +1,24 @@
+.articleBox{
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    width: 270px;
+    > * {
+        margin: 5px;
+    }
+}
+.descriptionArticle{
+    height: 50px;
+}
+.videPanier{
+    color:transparent
+}
+.cross{
+    font-size: 17px;
+    margin-left: 5px;
+}
+.containerCross{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

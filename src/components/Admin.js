@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Admin.css";
+import "../styles/components/Admin.css";
 import { getUrl } from "../helpers/GetUrl";
 import ArticlePerime from "./ArticlePerime";
 import ArticleRestant from "./ArticleRestant";
 
-const Admin = () => {
-	const [choice, setChoice] = useState("");
+const Admin = ({ choice }) => {
 	const [tabPerime, setTabPerime] = useState([]);
 	const [tabRestant, setTabRestant] = useState([]);
 	const [changementPerime, setChangementPerime] = useState(0);
@@ -13,7 +12,6 @@ const Admin = () => {
 	useEffect(() => {
 		setChangementPerime(0);
 		setChangementRestant(0);
-		setChoice("restant");
 	}, []);
 	useEffect(() => {
 		fetch(getUrl() + "/getAllStockPerime")
@@ -29,21 +27,11 @@ const Admin = () => {
 				setTabRestant(data.table);
 			});
 	}, [changementRestant]);
-	function restant() {
-		setChoice("restant");
-	}
-	function perime() {
-		setChoice("perime");
-	}
 	return (
 		<div id="admin">
-			<span className="clickable" id="navAdmin">
-				<span onClick={restant}>Stock Restant</span>
-				<span onClick={perime}>Stock Périmé</span>
-			</span>
 			<div>
 				{choice === "restant" ? (
-					<span>
+					<span className="restantContainer">
 						{tabRestant.map((e) => (
 							<ArticleRestant
 								key={e[0]}
