@@ -1,10 +1,10 @@
 import { getUrl } from "./GetUrl";
 import { eraseCookie, getCookie, setCookie } from "./Cookie";
 
-export function logIn(setIsLogIn, setUsername) {
+export function logIn(setIsLogIn, setUsername, setIsAdmin) {
 	let localUsername = getCookie("username");
 	let localPassword = getCookie("password");
-	if (localUsername === "" || localPassword === "") {
+	if (localUsername === undefined || localPassword === undefined) {
 		setIsLogIn(false);
 		return;
 	}
@@ -17,9 +17,10 @@ export function logIn(setIsLogIn, setUsername) {
 	})
 		.then((res) => res.json())
 		.then((data) => {
-			if (data === "True") {
+			if (data.auth === true) {
 				setIsLogIn(true);
 				setUsername(localUsername);
+				setIsAdmin(data.role === "Admin");
 			} else {
 				setIsLogIn(false);
 				disconnect();

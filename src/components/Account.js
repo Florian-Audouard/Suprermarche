@@ -46,12 +46,12 @@ const Account = ({
 	useEffect(() => {
 		setIsLoad(false);
 		setIsAdmin(false);
-		logIn(setIsLogIn, setUsername);
+		logIn(setIsLogIn, setUsername, setIsAdmin);
 		setTextConnection("");
 	}, []);
 	useEffect(() => {
 		if (isLogIn === false || isLogIn === true) return;
-		logIn(setIsLogIn, setUsername);
+		logIn(setIsLogIn, setUsername, setIsAdmin);
 	}, [isLoad, isLogIn]);
 	useEffect(() => {
 		if (isLogIn !== false && isLogIn !== true) return;
@@ -70,11 +70,10 @@ const Account = ({
 				let table = data.table[0];
 				setNom(table[1]);
 				setPrenom(table[2]);
-				setPoints(table[3]);
-				setIsAdmin(table[7] === "Admin");
+				if (!isAdmin) setPoints(table[3]);
 				setIsLoad(true);
 			});
-	}, [username, isLogIn]);
+	}, [username, isLogIn, isAdmin, panierChange]);
 	useEffect(() => {
 		const panier = getPanierCookie();
 		if (Object.keys(panier).length === 0) {
@@ -126,10 +125,11 @@ const Account = ({
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data === "True") {
+				if (data.auth === true) {
 					setTextConnection("");
 					setAccount(username, md5Password);
 					setIsLogIn(true);
+					setIsAdmin(data.role === "Admin");
 				} else {
 					setTextConnection(
 						"Nom d'utilisateur ou mots de passe incorrect"

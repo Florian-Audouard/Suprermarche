@@ -107,7 +107,7 @@ def achat(cur, client, paiement, list_achat, nb_jour):
 
 @clean_querry
 def add_transaction(cur):
-    cur.execute("""SELECT num_client FROM Client WHERE Client.Statut='Client'; """)
+    cur.execute("""SELECT num_client FROM Client; """)
     tmp = cur.fetchall()
     list_cli = [x[0] for x in tmp]
     cur.execute("""SELECT Num_Paiement FROM Paiement """)
@@ -134,11 +134,18 @@ def add_transaction(cur):
 # permet d'obtenir toutes les informations du clients or mdp et login
 @clean_querry
 def get_profil(cur, username, password):
-    if not auth(cur, username, password):
+    auth_info = auth(cur, username, password)
+    if not auth_info["auth"]:
         return False
+    if auth_info["role"] == "Client":
+        cur.execute(
+            """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client Where Username=%(username)s;""",
+            {"username": username},
+        )
+        return cur.fetchall()
     cur.execute(
-        """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel,statut from Client
-            WHERE ID = %(username)s;""",
+        """select Num_Admin,Nom, Prenom from Admin
+            WHERE username = %(username)s;""",
         {"username": username},
     )
     return cur.fetchall()
@@ -159,8 +166,11 @@ def get_all_stock(cur):
 
 
 # permet l'historique des achats (prix total d'un transaction)
-def get_historique_data(cur, id):
-    cur.execute("SELECT Num_client FROM Client WHERE ID=%(id)s", {"id": id})
+def get_historique_data(cur, username):
+    cur.execute(
+        "SELECT Num_client FROM Client WHERE username=%(username)s",
+        {"username": username},
+    )
     client = cur.fetchall()[0][0]
     cur.execute(
         "select Num_achat, Date, mode_paiement, sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat, Date, mode_paiement ORDER BY Num_achat DESC;",
@@ -180,7 +190,7 @@ def get_detail_historique(cur, num_achat):
 
 @clean_querry
 def get_historique(cur, username, password):
-    if not auth(cur, username, password):
+    if not auth(cur, username, password)["auth"]:
         return False
     table = []
     for i in get_historique_data(cur, username):
@@ -208,12 +218,13 @@ def change_stock_retire(cur, num_produit):
 
 def auth(cur, username, password):
     cur.execute(
-        "SELECT count(ID) FROM Client WHERE ID = %(username)s AND MDP = %(password)s;",
-        {"username": str(username), "password": str(password)},
+        "SELECT Role FROM Connexion WHERE Username = %(username)s AND Password = %(password)s;",
+        {"username": username, "password": password},
     )
-    if cur.fetchall()[0][0] == 1:
-        return True
-    return False
+    res = cur.fetchall()
+    if len(res) == 0:
+        return {"auth": False}
+    return {"auth": True, "role": res[0][0]}
 
 
 @clean_querry
@@ -231,10 +242,10 @@ def add_produit(cur, numero, quantite):
 
 @clean_querry
 def transaction(cur, username, password, liste_produit):
-    if not auth(cur, username, password):
+    if not auth(cur, username, password)["auth"]:
         return False
     cur.execute(
-        """SELECT num_client FROM Client WHERE ID=%(username)s; """,
+        """SELECT num_client FROM Client WHERE username=%(username)s; """,
         {"username": username},
     )
     client = cur.fetchall()[0][0]

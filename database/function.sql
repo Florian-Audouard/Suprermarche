@@ -116,3 +116,5 @@ CREATE OR REPLACE FUNCTION restock_trigger_func() RETURNS TRIGGER LANGUAGE PLPGS
         END IF;
         RETURN NEW;
     END$$;
+
+

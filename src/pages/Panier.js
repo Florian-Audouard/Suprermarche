@@ -15,7 +15,7 @@ const Panier = () => {
 	const [isLogIn, setIsLogIn] = useState("");
 	useEffect(() => {
 		setChangePanier(0);
-		logIn(setIsLogIn, setUsername);
+		logIn(setIsLogIn, setUsername, (_) => {});
 	}, []);
 	useEffect(() => {
 		if (isLogIn === false) navigate("/");
@@ -45,6 +45,7 @@ const Panier = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				console.log(data);
 				if (data === "True") {
 					delPanier();
 					setChangePanier(changePanier + 1);
@@ -58,7 +59,7 @@ const Panier = () => {
 				setIsLoadParents={(_) => {}}
 				setIsAdminParents={(_) => {}}
 				setPanierChangeParents={setChangePanier}
-				panierChange={changePanier}
+				panierChangeParents={changePanier}
 				setChoiceAdmin={(_) => {}}
 			></Account>
 			{Object.keys(panier).length === 0 ? (

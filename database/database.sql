@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS
     Danger,
     Categorie,
     Client,
+    Admin,
     Paiement,
     Description,
     Stock,
@@ -30,12 +31,19 @@ Pt_Fidelite DECIMAL(18,2),
 Age INT NOT NULL,
 Mail VARCHAR(250),
 Num_Tel VARCHAR(10),
-ID VARCHAR(20) UNIQUE,
-MDP VARCHAR(32) NOT NULL,
-STATUT VARCHAR(20) NOT NULL,
+Username VARCHAR(20) UNIQUE,
+Password VARCHAR(32) NOT NULL,
 
 CONSTRAINT Age CHECK (Age>=18), --les clients doivent avoir au moins 18 ans pour être abonné au magasin
 CONSTRAINT PointsFidelite CHECK(Pt_Fidelite >= 0) --Il est impossible que les client aient des points de fidelite negatifs
+);
+
+CREATE TABLE Admin(
+    Num_Admin SERIAL PRIMARY KEY,
+    Nom VARCHAR(250) NOT NULL,
+    Prenom VARCHAR(250) NOT NULL,
+    Username VARCHAR(20) UNIQUE,
+    Password VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE Paiement(
@@ -141,4 +149,14 @@ CREATE OR REPLACE VIEW Client_Produit AS (
     FROM Ligne_Achat
     INNER JOIN Achat_Paiement ON Achat_Paiement.num_achat = Ligne_Achat.num_achat
     INNER JOIN Produit_in_Stock ON Produit_in_Stock.num_produit = Ligne_Achat.num_produit
+);
+
+
+
+CREATE OR REPLACE VIEW Connexion AS (
+    SELECT Username, Password, 'Client' as Role
+    FROM Client
+    UNION
+    SELECT Username, Password, 'Admin' as Role
+    FROM Admin
 );

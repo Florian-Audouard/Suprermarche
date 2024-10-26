@@ -75,7 +75,7 @@ def get_all_stock_perime():
 def log_in():
     result = request.get_data()
     id = json.loads(result.decode("utf-8"))
-    return jsonify(str(connection(id["username"], id["password"])))
+    return jsonify(connection(id["username"], id["password"]))
 
 
 @app.route("/RetireStock", methods=["POST"])
