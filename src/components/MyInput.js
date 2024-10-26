@@ -4,15 +4,22 @@ import "../styles/components/MyInput.css";
 
 const MyInput = ({ max, setValue, value, min }) => {
 	function add() {
-		if (value < max) setValue(value + 1);
+		acceptValue(value + 1);
 	}
 	function sub() {
-		if (value > min) setValue(value - 1);
+		acceptValue(value - 1);
+	}
+	function acceptValue(e) {
+		if (isNaN(e)) {
+			return;
+		}
+		e = Number(e);
+		if (e < min) return setValue(min);
+		else if (e > max) return setValue(max);
+		else return setValue(e);
 	}
 	function change(e) {
-		if (e.target.value < min) setValue(min);
-		else if (e.target.value > max) setValue(max);
-		else setValue(parseInt(e.target.value));
+		acceptValue(e.target.value);
 	}
 	return (
 		<span className="button" id="inputContainer">
@@ -20,7 +27,7 @@ const MyInput = ({ max, setValue, value, min }) => {
 			<input
 				type="number"
 				onChange={change}
-				value={value}
+				value={Number(value)}
 				min={min}
 				max={max}
 			></input>
