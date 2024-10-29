@@ -224,6 +224,7 @@ const Account = ({
 							setIsLogIn("");
 							setIsAdmin(false);
 							setIsLoad(false);
+							if (path !== "/") navigate("/");
 						}}
 					>
 						Se déconnecter
