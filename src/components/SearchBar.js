@@ -13,6 +13,7 @@ const SearchBar = ({
 	const [categorieTab, setCategorieTab] = useState([]);
 	const [sousCategorieTab, setSousCategorieTab] = useState([]);
 
+	// useEffect(() => {}, [categorie]); // en theorie ne sert a rien mais empeche un bug de refresh
 	useEffect(() => {
 		setCategorie("");
 		setSousCategorie("");

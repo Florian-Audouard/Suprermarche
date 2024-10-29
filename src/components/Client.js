@@ -13,6 +13,9 @@ const Client = ({ panierChange, setPanierChange }) => {
 	const [recherche, setRecherche] = useState("");
 	useEffect(() => {
 		setPanier(getPanierCookie());
+		console.log("cattegorie", categorie);
+		console.log("sousCategorie", sousCategorie);
+		console.log("recherche", recherche);
 		fetch(getUrl() + "/getStockDispo", {
 			method: "POST",
 			body: JSON.stringify({
