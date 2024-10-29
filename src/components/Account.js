@@ -26,6 +26,7 @@ const Account = ({
 	const [prenom, setPrenom] = useState("");
 	const [points, setPoints] = useState("");
 	const input2 = useRef(null);
+	const [path, setPath] = useState("");
 	const navigate = useNavigate();
 	useEffect(() => {
 		setPanierChange(panierChangeParents);
@@ -46,6 +47,7 @@ const Account = ({
 	useEffect(() => {
 		setIsLoad(false);
 		setIsAdmin(false);
+		setPath(window.location.pathname);
 		logIn(setIsLogIn, setUsername, setIsAdmin);
 		setTextConnection("");
 	}, []);
@@ -67,10 +69,9 @@ const Account = ({
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				let table = data.table[0];
-				setNom(table[1]);
-				setPrenom(table[2]);
-				if (!isAdmin) setPoints(table[3]);
+				setNom(data[1]);
+				setPrenom(data[2]);
+				if (!isAdmin) setPoints(data[3]);
 				setIsLoad(true);
 			});
 	}, [username, isLogIn, isAdmin, panierChange]);
@@ -119,7 +120,7 @@ const Account = ({
 			return;
 		}
 		let md5Password = md5(password);
-		fetch(getUrl() + "/LogIn", {
+		fetch(getUrl() + "/logIn", {
 			method: "POST",
 			body: JSON.stringify({ username, password: md5Password }),
 		})
@@ -167,30 +168,31 @@ const Account = ({
 									>
 										Supprimer le panier
 									</div>
-									<div
-										className="button"
-										onClick={(_) => navigate("/panier")}
-									>
-										Voir Panier
-									</div>
+									{path !== "/panier" ? (
+										<div
+											className="button"
+											onClick={(_) => navigate("/panier")}
+										>
+											Voir Panier
+										</div>
+									) : (
+										<></>
+									)}
 								</span>
 							) : (
 								<></>
 							)}
 
-							<div
-								className="button"
-								onClick={(_) => navigate("/profile/")}
-							>
-								Voir profile
-							</div>
-
-							<div
-								className="button"
-								onClick={(_) => navigate("/")}
-							>
-								Page d'acceuil
-							</div>
+							{path !== "/profile" ? (
+								<div
+									className="button"
+									onClick={(_) => navigate("/profile")}
+								>
+									Voir profile
+								</div>
+							) : (
+								<></>
+							)}
 						</span>
 					) : (
 						<span>
@@ -208,7 +210,13 @@ const Account = ({
 							</div>
 						</span>
 					)}
-
+					{path !== "/" ? (
+						<div className="button" onClick={(_) => navigate("/")}>
+							Page d'acceuil
+						</div>
+					) : (
+						<></>
+					)}
 					<div
 						className="button"
 						onClick={(_) => {
@@ -240,17 +248,24 @@ const Account = ({
 						onChange={(e) => setPassword(e.target.value)}
 						onKeyUp={keyInputHandler}
 					/>
-					<div>
+					<div className="checkbox-wrapper-14">
 						<input
-							id="checkBoxPassword"
+							id="s1-14"
 							type="checkbox"
+							className="switch"
 							onChange={showPassword}
-						/>{" "}
-						Show password
+						/>
+						<label htmlFor="s1-14" className="clickable">
+							Montrer le mot de passe
+						</label>
 					</div>
-					<button id="connectionButton" onClick={tryLogIn}>
+					<span
+						id="connectionButton"
+						className="button"
+						onClick={tryLogIn}
+					>
 						Connection
-					</button>
+					</span>
 					<div>{textConnection}</div>
 				</div>
 			)}

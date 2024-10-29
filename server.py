@@ -7,6 +7,7 @@
 # pylint:disable=line-too-long
 import os
 import json
+from webbrowser import get
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 from dotenv import dotenv_values
@@ -23,10 +24,20 @@ from database.database import (
     get_all_stock,
     get_historique,
     get_all_stock_perime_data,
+    get_categories,
     connection,
     change_stock_retire,
     transaction,
+    get_sous_categories,
 )
+
+
+def search_bar_querry(querry):
+    if querry["categorie"] == "":
+        querry["categorie"] = "all"
+    if querry["sousCategorie"] == "":
+        querry["sousCategorie"] = "all"
+    return querry
 
 
 @app.route("/", defaults={"path": ""})
@@ -39,46 +50,62 @@ def index(path):
 
 @app.route("/getDatabase", methods=["GET"])
 def get_database():
-    return jsonify({"table": get_data()})
+    return jsonify(get_data())
 
 
 @app.route("/getProfilClient", methods=["POST"])
 def get_profil_client():
     result = request.get_data()
     id = json.loads(result.decode("utf-8"))
-    return jsonify({"table": get_profil(id["username"], id["password"])})
+    return jsonify(get_profil(id["username"], id["password"]))
 
 
-@app.route("/getStockDispo", methods=["GET"])
+@app.route("/getStockDispo", methods=["POST"])
 def get_stock_dispo_server():
-    return jsonify({"table": get_stock_dispo()})
+    result = request.get_data()
+    querry = search_bar_querry(json.loads(result.decode("utf-8")))
+    return jsonify(
+        get_stock_dispo(
+            querry["recherche"], querry["categorie"], querry["sousCategorie"]
+        )
+    )
 
 
-@app.route("/getAllStock", methods=["GET"])
+@app.route("/getAllStock", methods=["POST"])
 def get_all_stock_server():
-    return jsonify({"table": get_all_stock()})
+    result = request.get_data()
+    querry = search_bar_querry(json.loads(result.decode("utf-8")))
+    return jsonify(
+        get_all_stock(querry["recherche"], querry["categorie"], querry["sousCategorie"])
+    )
+
+
+@app.route("/getAllStockPerime", methods=["POST"])
+def get_all_stock_perime():
+    result = request.get_data()
+    querry = search_bar_querry(json.loads(result.decode("utf-8")))
+    return jsonify(
+        get_all_stock_perime_data(
+            querry["recherche"], querry["categorie"], querry["sousCategorie"]
+        )
+    )
 
 
 @app.route("/getHistorique", methods=["POST"])
 def get_historique_server():
     result = request.get_data()
     id = json.loads(result.decode("utf-8"))
-    return jsonify({"table": get_historique(id["username"], id["password"])})
+    return jsonify(get_historique(id["username"], id["password"]))
 
 
-@app.route("/getAllStockPerime", methods=["GET"])
-def get_all_stock_perime():
-    return jsonify({"table": get_all_stock_perime_data()})
-
-
-@app.route("/LogIn", methods=["POST"])
+@app.route("/logIn", methods=["POST"])
 def log_in():
     result = request.get_data()
     id = json.loads(result.decode("utf-8"))
     return jsonify(connection(id["username"], id["password"]))
 
 
-@app.route("/RetireStock", methods=["POST"])
+@app.route("/retireStock", methods=["POST"])
 def change_stock_retire_server():
     result = request.get_data()
     num_produit = json.loads(result.decode("utf-8"))["numProduit"]
@@ -86,7 +113,7 @@ def change_stock_retire_server():
     return "ok"
 
 
-@app.route("/AjoutStock", methods=["POST"])
+@app.route("/ajoutStock", methods=["POST"])
 def add_stock_server():
     result = request.get_data()
     arg = json.loads(result.decode("utf-8"))
@@ -94,14 +121,25 @@ def add_stock_server():
     return "ok"
 
 
-@app.route("/Transaction", methods=["POST"])
+@app.route("/transaction", methods=["POST"])
 def transaction_server():
     result = request.get_data()
     arg = json.loads(result.decode("utf-8"))
-    print(arg["listeProduit"])
     return jsonify(
         str(transaction(arg["username"], arg["password"], arg["listeProduit"]))
     )
+
+
+@app.route("/getCategorie", methods=["Get"])
+def get_categorie_server():
+    return jsonify(get_categories())
+
+
+@app.route("/getSousCategorie", methods=["POST"])
+def get_sous_categorie_server():
+    result = request.get_data()
+    arg = json.loads(result.decode("utf-8"))
+    return jsonify(get_sous_categories(arg["categorie"]))
 
 
 ENV_FILENAME = ".env"

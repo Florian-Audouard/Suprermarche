@@ -5,6 +5,7 @@
 # pylint:disable=trailing-whitespace
 import os
 from random import choice, randint, sample
+import re
 import urllib.parse
 import psycopg2
 from dotenv import dotenv_values
@@ -116,17 +117,25 @@ def add_transaction(cur):
     for client in list_cli:
         nb = randint(1, 5)
         for i in range(nb):
-            cur.execute("""SELECT num_description FROM Stock_Quantite_Disponible """)
+            cur.execute(
+                """SELECT num_description FROM Stock_Quantite_Disponible WHERE prix < 20;"""
+            )
             tmp = cur.fetchall()
             list_stock = [x[0] for x in tmp]
+            list_random = sample(
+                list_stock,
+                randint(len(list_stock) // 16, len(list_stock) // 8),
+            )
+            list_achat = []
+            for k in list_random:
+                for x in range(randint(1, 5)):
+                    list_achat.append(k)
+
             achat(
                 cur,
                 client,
                 choice(list_paiement),
-                sample(
-                    list_stock,
-                    randint(len(list_stock) // 16, len(list_stock) // 8),
-                ),
+                list_achat,
                 nb - i,
             )
 
@@ -142,26 +151,64 @@ def get_profil(cur, username, password):
             """select Num_Client, Nom, Prenom, Pt_Fidelite, Age,Mail,Num_tel from Client Where Username=%(username)s;""",
             {"username": username},
         )
-        return cur.fetchall()
+        return cur.fetchall()[0]
     cur.execute(
         """select Num_Admin,Nom, Prenom from Admin
             WHERE username = %(username)s;""",
         {"username": username},
     )
-    return cur.fetchall()
+    return cur.fetchall()[0]
 
 
 # permet d'obtenir tous les articles disponibles en magasin
 @clean_querry
-def get_stock_dispo(cur):
-    cur.execute("select * from Stock_Quantite_Disponible;")
+def get_stock_dispo(cur, recherche, categorie, sous_categorie):
+    cur.execute(
+        """select num_description,nom_produit,marque, description,prix,quantite
+            FROM Stock_Quantite_Disponible 
+                WHERE (Nom_produit ILIKE %(recherche)s OR Marque ILIKE %(recherche)s OR Description ILIKE %(recherche)s)
+                    AND (Categorie=%(categorie)s OR %(categorie)s='all')
+                    AND (Sous_Categorie=%(sous_categorie)s OR %(sous_categorie)s='all');""",
+        {
+            "categorie": categorie,
+            "sous_categorie": sous_categorie,
+            "recherche": f"%{recherche}%",
+        },
+    )
     return cur.fetchall()
 
 
 # permet d'obtenir toutes les infos des stocks
 @clean_querry
-def get_all_stock(cur):
-    cur.execute("select * from Stock_Quantite;")
+def get_all_stock(cur, recherche, categorie, sous_categorie):
+    cur.execute(
+        """select num_description,nom_produit,marque, description,prix,quantite 
+            FROM Stock_Quantite
+                WHERE (Nom_produit ILIKE %(recherche)s OR Marque ILIKE %(recherche)s OR Description ILIKE %(recherche)s)
+                    AND (Categorie=%(categorie)s OR %(categorie)s='all')
+                    AND (Sous_Categorie=%(sous_categorie)s OR %(sous_categorie)s='all');""",
+        {
+            "categorie": categorie,
+            "sous_categorie": sous_categorie,
+            "recherche": f"%{recherche}%",
+        },
+    )
+    return cur.fetchall()
+
+
+@clean_querry
+def get_all_stock_perime_data(cur, recherche, categorie, sous_categorie):
+    cur.execute(
+        """SELECT * FROM Produit_in_stock WHERE Etat ='En Stock' AND Date_Peremption < CURRENT_DATE
+        AND (Nom_produit ILIKE %(recherche)s OR Marque ILIKE %(recherche)s OR Description ILIKE %(recherche)s)
+                    AND (Categorie=%(categorie)s OR %(categorie)s='all')
+                    AND (Sous_Categorie=%(sous_categorie)s OR %(sous_categorie)s='all');""",
+        {
+            "categorie": categorie,
+            "sous_categorie": sous_categorie,
+            "recherche": f"%{recherche}%",
+        },
+    )
     return cur.fetchall()
 
 
@@ -173,7 +220,7 @@ def get_historique_data(cur, username):
     )
     client = cur.fetchall()[0][0]
     cur.execute(
-        "select Num_achat, Date, mode_paiement, sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat, Date, mode_paiement ORDER BY Num_achat DESC;",
+        "select Num_achat, Date, mode_paiement,count(prix) ,sum(prix) from Client_Produit WHERE num_client=%(client)s Group BY Num_achat, Date, mode_paiement ORDER BY Num_achat DESC;",
         {"client": client},
     )
     return cur.fetchall()
@@ -182,7 +229,7 @@ def get_historique_data(cur, username):
 # permet d'obtenir le detail de d'une transaction
 def get_detail_historique(cur, num_achat):
     cur.execute(
-        "SELECT prix,nom_produit,marque,description,date_peremption FROM Client_Produit WHERE Num_achat=%(num_achat)s;",
+        "SELECT nom_produit,marque,count(nom_produit), prix FROM Client_Produit WHERE Num_achat=%(num_achat)s GROUP BY nom_produit,marque,prix ORDER BY nom_produit,marque ASC;",
         {"num_achat": num_achat},
     )
     return cur.fetchall()
@@ -196,14 +243,6 @@ def get_historique(cur, username, password):
     for i in get_historique_data(cur, username):
         table.append((i, get_detail_historique(cur, i[0])))
     return table
-
-
-@clean_querry
-def get_all_stock_perime_data(cur):
-    cur.execute(
-        """SELECT * FROM Produit_in_stock WHERE Etat ='En Stock' AND Date_Peremption < CURRENT_DATE;"""
-    )
-    return cur.fetchall()
 
 
 @clean_querry
@@ -253,6 +292,23 @@ def transaction(cur, username, password, liste_produit):
     achat(cur, client, 1, liste_produit, 0)
 
     return True
+
+
+@clean_querry
+def get_categories(cur):
+    cur.execute("SELECT DISTINCT Categorie FROM Categorie;")
+    t = [x[0] for x in cur.fetchall()]
+    return t
+
+
+@clean_querry
+def get_sous_categories(cur, categorie):
+    cur.execute(
+        "SELECT Sous_Categorie FROM Categorie WHERE Categorie=%(categorie)s;",
+        {"categorie": categorie},
+    )
+    t = [x[0] for x in cur.fetchall()]
+    return t
 
 
 if __name__ == "__main__":

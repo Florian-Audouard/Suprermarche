@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getUrl } from "../helpers/GetUrl";
-import { getPassword, getUsername } from "../helpers/LogIn";
-import "../styles/Profile.css";
+import { getPassword, getUsername, logIn } from "../helpers/LogIn";
+import "../styles/pages/Profile.css";
 import Historique from "../components/Historique";
 import { useNavigate } from "react-router-dom";
 import Account from "../components/Account";
@@ -15,9 +15,24 @@ const Profile = () => {
 	const [tel, setTel] = useState("num_tel");
 	const [isLoad, setIsLoad] = useState(false);
 	const [historique, setHistorique] = useState([]);
+	const [isLogIn, setIsLogIn] = useState("");
+	const [isAdmin, setIsAdmin] = useState("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		logIn(setIsLogIn, (_) => {}, setIsAdmin);
+	}, []);
+
+	useEffect(() => {
+		if (isLogIn === "") return;
+		if (isAdmin === true) {
+			navigate("/");
+			return;
+		}
+		if (isLogIn === false) {
+			navigate("/");
+			return;
+		}
 		let username = getUsername();
 		let md5Password = getPassword();
 
@@ -27,17 +42,12 @@ const Profile = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.table === false) {
-					navigate("/");
-					return;
-				}
-				let table = data.table[0];
-				setNom(table[1]);
-				setPrenom(table[2]);
-				setPtfidelite(table[3]);
-				setAge(table[4]);
-				setMail(table[5]);
-				setTel(table[6]);
+				setNom(data[1]);
+				setPrenom(data[2]);
+				setPtfidelite(data[3]);
+				setAge(data[4]);
+				setMail(data[5]);
+				setTel(data[6]);
 				setIsLoad(true);
 			});
 		fetch(getUrl() + "/getHistorique", {
@@ -46,13 +56,9 @@ const Profile = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.table === false) {
-					navigate("/");
-					return;
-				}
-				setHistorique(data.table);
+				setHistorique(data);
 			});
-	}, [navigate]);
+	}, [isAdmin, isLogIn, navigate]);
 
 	return (
 		<span>
@@ -66,6 +72,7 @@ const Profile = () => {
 			></Account>
 			{isLoad ? (
 				<div id="profile">
+					<h1>Vos information :</h1>
 					<div>Nom : {nom} </div>
 					<div> Prénom: {prenom} </div>
 					<div> Points: {ptfidelite} </div>
@@ -79,7 +86,7 @@ const Profile = () => {
 
 			<div>
 				<div id="historique_achat">
-					{" "}
+					<h1>Votre historique :</h1>{" "}
 					{historique?.map((e) => (
 						<Historique
 							key={e[0][0]}

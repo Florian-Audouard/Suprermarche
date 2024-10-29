@@ -1,0 +1,30 @@
+.searchBar{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    *{
+        margin-left: 50px;
+        width: 300px;
+    }
+    select{
+        border: solid 1px rgb(0,255,150);
+        box-shadow: 0 0 5px rgb(0,255,150);
+        border-radius: 5px;
+        background-color: rgba(10,100,10,0.75) ;
+        color: white;
+        font-size: 18px;
+        padding: 5px;
+        
+    }
+    
+
+    
+}
+
+option{
+    background-color: rgba(10,100,10,0.75) ;
+    color: white;
+    font-size: 18px;
+    padding: 5px;
+}

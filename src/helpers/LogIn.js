@@ -8,7 +8,7 @@ export function logIn(setIsLogIn, setUsername, setIsAdmin) {
 		setIsLogIn(false);
 		return;
 	}
-	fetch(getUrl() + "/LogIn", {
+	fetch(getUrl() + "/logIn", {
 		method: "POST",
 		body: JSON.stringify({
 			username: localUsername,

@@ -11,7 +11,7 @@ const ArticlePerime = ({
 	setChangment,
 }) => {
 	function deleteArticle() {
-		fetch(getUrl() + "/RetireStock", {
+		fetch(getUrl() + "/retireStock", {
 			method: "POST",
 			body: JSON.stringify({ numProduit: numero }),
 		}).then((e) => {

@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS
-    Danger,
     Categorie,
     Client,
     Admin,
@@ -11,11 +10,6 @@ DROP TABLE IF EXISTS
 
 -- Creation des tables
 
-CREATE TABLE Danger(
-Num_Danger INT PRIMARY KEY,
-Indication VARCHAR(250) NOT NULL,
-Conseil VARCHAR (250) NOT NULL
-);
 
 CREATE TABLE Categorie(
 Num_Categorie INT PRIMARY KEY,
@@ -57,10 +51,8 @@ Nom VARCHAR(250) NOT NULL,
 Marque VARCHAR(250) NOT NULL,
 Description VARCHAR(250),
 Prix DECIMAL(18,2) NOT NULL,
-Num_Danger INT,
 Num_Categorie INT NOT NULL,
 
-FOREIGN KEY(Num_Danger) REFERENCES Danger(Num_Danger),
 FOREIGN KEY(Num_Categorie) REFERENCES Categorie(Num_Categorie),
 
 CONSTRAINT Prix CHECK (Prix>0)
@@ -99,14 +91,14 @@ FOREIGN KEY(Num_Achat) REFERENCES Achat(Num_Achat)
 
 -- Creation d'une view pour joindre toutes les informations relatives aux produits
 CREATE OR REPLACE VIEW Produit AS (
-    SELECT description.num_description,description.nom AS Nom_Produit,description.Marque,description.description,description.prix,danger.Indication,danger.conseil,Categorie.Categorie,Categorie.Sous_Categorie
-        FROM (description JOIN Danger ON description.Num_Danger = danger.Num_Danger) JOIN Categorie ON description.Num_Categorie = Categorie.Num_Categorie
+    SELECT description.num_description,description.nom AS Nom_Produit,description.Marque,description.description,description.prix,Categorie.Categorie,Categorie.Sous_Categorie
+        FROM description JOIN Categorie ON description.Num_Categorie = Categorie.Num_Categorie
 );
 
 
 -- Creation d'une view pour recuperer les quantites non vendu et non perime d'un produit
 CREATE OR REPLACE VIEW Stock_Quantite AS (
-    SELECT Produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Indication,produit.conseil,produit.Categorie,produit.Sous_Categorie,tmp.quantite
+    SELECT Produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Categorie,produit.Sous_Categorie,tmp.quantite
     FROM Produit JOIN
     (SELECT produit.num_description,count(stock.num_description) AS quantite 
         FROM stock RIGHT JOIN Produit ON Produit.num_description = stock.num_description

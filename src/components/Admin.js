@@ -3,33 +3,61 @@ import "../styles/components/Admin.css";
 import { getUrl } from "../helpers/GetUrl";
 import ArticlePerime from "./ArticlePerime";
 import ArticleRestant from "./ArticleRestant";
+import SearchBar from "./SearchBar";
 
 const Admin = ({ choice }) => {
 	const [tabPerime, setTabPerime] = useState([]);
 	const [tabRestant, setTabRestant] = useState([]);
 	const [changementPerime, setChangementPerime] = useState(0);
 	const [changementRestant, setChangementRestant] = useState(0);
+	const [categorie, setCategorie] = useState("");
+	const [sousCategorie, setSousCategorie] = useState("");
+	const [recherche, setRecherche] = useState("");
 	useEffect(() => {
 		setChangementPerime(0);
 		setChangementRestant(0);
 	}, []);
 	useEffect(() => {
-		fetch(getUrl() + "/getAllStockPerime")
+		if (choice !== "perime") return;
+		fetch(getUrl() + "/getAllStockPerime", {
+			method: "POST",
+			body: JSON.stringify({
+				categorie,
+				sousCategorie,
+				recherche,
+			}),
+		})
 			.then((res) => res.json())
 			.then((data) => {
-				setTabPerime(data.table);
+				setTabPerime(data);
 			});
-	}, [changementPerime]);
+	}, [changementPerime, choice, categorie, sousCategorie, recherche]);
 	useEffect(() => {
-		fetch(getUrl() + "/getAllStock")
+		if (choice !== "restant") return;
+		fetch(getUrl() + "/getAllStock", {
+			method: "POST",
+			body: JSON.stringify({
+				categorie,
+				sousCategorie,
+				recherche,
+			}),
+		})
 			.then((res) => res.json())
 			.then((data) => {
-				setTabRestant(data.table);
+				setTabRestant(data);
 			});
-	}, [changementRestant]);
+	}, [changementRestant, choice, categorie, sousCategorie, recherche]);
 	return (
 		<div id="admin">
 			<div>
+				<SearchBar
+					categorie={categorie}
+					setCategorie={setCategorie}
+					sousCategorie={sousCategorie}
+					setSousCategorie={setSousCategorie}
+					recherche={recherche}
+					setRecherche={setRecherche}
+				></SearchBar>
 				{choice === "restant" ? (
 					<span className="restantContainer">
 						{tabRestant.map((e) => (
@@ -40,7 +68,7 @@ const Admin = ({ choice }) => {
 								marque={e[2]}
 								description={e[3]}
 								prix={e[4]}
-								quantite={e[9]}
+								quantite={e[5]}
 								changementRestant={changementRestant}
 								setChangementRestant={setChangementRestant}
 							></ArticleRestant>

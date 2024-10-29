@@ -35,7 +35,7 @@ const Panier = () => {
 		return listeProduit;
 	}
 	function transaction() {
-		fetch(getUrl() + "/Transaction", {
+		fetch(getUrl() + "/transaction", {
 			method: "POST",
 			body: JSON.stringify({
 				username: username,

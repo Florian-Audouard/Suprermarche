@@ -16,7 +16,7 @@ const ArticleRestant = ({
 
 	function addStock() {
 		if (ajoutQuantite === 0) return;
-		fetch(getUrl() + "/AjoutStock", {
+		fetch(getUrl() + "/ajoutStock", {
 			method: "POST",
 			body: JSON.stringify({
 				numProduit: numero,
