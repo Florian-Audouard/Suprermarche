@@ -38,7 +38,7 @@ CONN_PARAMS = f"postgresql://{config['USER_DB']}:{config['PASSWORD_DB']}@{config
 
 FILENAME_TAB = ["database.sql", "function.sql", "trigger.sql"]
 
-FILENAME_DB_DONNE = "donne_test.sql"
+FILENAME_DB_DONNE_TAB = ["donne_test.sql"]
 
 
 def clean_querry(func):
@@ -61,7 +61,7 @@ def clean_querry(func):
 
 @clean_querry
 def reset_table(cur):
-    for filename in FILENAME_TAB:
+    for filename in tqdm(FILENAME_TAB, desc="Resetting tables"):
         with open(filename, "r", encoding="utf-8") as file:
             cur.execute(file.read())
 
@@ -76,8 +76,9 @@ def get_data(cur):
 
 @clean_querry
 def init_data(cur):
-    with open(FILENAME_DB_DONNE, "r", encoding="utf-8") as file:
-        cur.execute(file.read())
+    for filename in tqdm(FILENAME_DB_DONNE_TAB, desc="Initializing data"):
+        with open(filename, "r", encoding="utf-8") as file:
+            cur.execute(file.read())
 
 
 @clean_querry
@@ -85,7 +86,7 @@ def add_produit_init(cur):
     cur.execute("""SELECT Num_Description FROM Description;""")
     list_produit = cur.fetchall()
     list_produit = [x[0] for x in list_produit]
-    for produit in list_produit:
+    for produit in tqdm(list_produit, desc="Adding stock"):
         cur.execute(
             """SELECT add_stock_init(%(Num_Produit)s);""",
             {
@@ -114,30 +115,35 @@ def add_transaction(cur):
     cur.execute("""SELECT Num_Paiement FROM Paiement """)
     tmp = cur.fetchall()
     list_paiement = [x[0] for x in tmp]
-    for client in list_cli:
-        nb = randint(1, 5)
-        for i in range(nb):
-            cur.execute(
-                """SELECT num_description FROM Stock_Quantite_Disponible WHERE prix < 20;"""
-            )
-            tmp = cur.fetchall()
-            list_stock = [x[0] for x in tmp]
-            list_random = sample(
-                list_stock,
-                randint(len(list_stock) // 16, len(list_stock) // 8),
-            )
-            list_achat = []
-            for k in list_random:
-                for x in range(randint(1, 5)):
-                    list_achat.append(k)
+    nb_transac_random = []
+    for i in list_cli:
+        nb_transac_random.append(randint(10, 20))
+    with tqdm(total=sum(nb_transac_random), desc="Adding transaction") as pbar:
+        for index, client in enumerate(list_cli):
+            nb = nb_transac_random[index]
+            for i in range(nb):
+                cur.execute(
+                    """SELECT num_description FROM Stock_Quantite_Disponible WHERE prix < 20;"""
+                )
+                tmp = cur.fetchall()
+                list_stock = [x[0] for x in tmp]
+                list_random = sample(
+                    list_stock,
+                    randint(len(list_stock) // 16, len(list_stock) // 8),
+                )
+                list_achat = []
+                for k in list_random:
+                    for x in range(randint(1, 5)):
+                        list_achat.append(k)
 
-            achat(
-                cur,
-                client,
-                choice(list_paiement),
-                list_achat,
-                nb - i,
-            )
+                achat(
+                    cur,
+                    client,
+                    choice(list_paiement),
+                    list_achat,
+                    nb - i,
+                )
+                pbar.update(1)
 
 
 # permet d'obtenir toutes les informations du clients or mdp et login
@@ -312,6 +318,8 @@ def get_sous_categories(cur, categorie):
 
 
 if __name__ == "__main__":
+    from tqdm import tqdm
+
     reset_table()
     init_data()
     add_produit_init()
