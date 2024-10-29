@@ -13,9 +13,9 @@ const Client = ({ panierChange, setPanierChange }) => {
 	const [recherche, setRecherche] = useState("");
 	useEffect(() => {
 		setPanier(getPanierCookie());
-		console.log("cattegorie", categorie);
-		console.log("sousCategorie", sousCategorie);
-		console.log("recherche", recherche);
+		console.log(categorie);
+		console.log(sousCategorie);
+		console.log(recherche);
 		fetch(getUrl() + "/getStockDispo", {
 			method: "POST",
 			body: JSON.stringify({
@@ -26,6 +26,7 @@ const Client = ({ panierChange, setPanierChange }) => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				console.log("data", data);
 				setArticleTab(data);
 			});
 	}, [categorie, sousCategorie, recherche]);
