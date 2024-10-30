@@ -45,8 +45,12 @@ const Account = ({
 	}, [isAdmin, setIsAdminParents]);
 
 	useEffect(() => {
+		console.log("isload : ", isLoad);
+		console.log("isadmin : ", isAdmin);
+		console.log("islogin : ", isLogIn);
+	}, [isLoad, isAdmin, isLogIn]);
+	useEffect(() => {
 		setIsLoad(false);
-		setIsAdmin(false);
 		setPath(window.location.pathname);
 		logIn(setIsLogIn, setUsername, setIsAdmin);
 		setTextConnection("");
@@ -151,130 +155,153 @@ const Account = ({
 	};
 
 	return (
-		<div id="account" className="border">
-			{isLogIn ? (
-				<div>
-					<div>
-						{nom + " " + prenom + (isAdmin ? " (Admin)" : "")}
-					</div>
-					{!isAdmin ? (
-						<span>
-							<div>Nombre de points : {points}</div>
-							<div>{panierText} </div>
-							{Object.keys(getPanierCookie()).length !== 0 ? (
+		<>
+			{isLoad ? (
+				<div id="account" className="border">
+					{isLogIn ? (
+						<div>
+							<div>
+								{nom +
+									" " +
+									prenom +
+									(isAdmin ? " (Admin)" : "")}
+							</div>
+							{!isAdmin ? (
 								<span>
-									<div
-										className="button"
-										onClick={(_) => {
-											delPanier();
-											setPanierChange((e) => e + 1);
-										}}
-									>
-										Supprimer le panier
-									</div>
-									{path !== "/panier" ? (
+									<div>Nombre de points : {points}</div>
+									<div>{panierText} </div>
+									{Object.keys(getPanierCookie()).length !==
+									0 ? (
+										<span>
+											<div
+												className="button"
+												onClick={(_) => {
+													delPanier();
+													setPanierChange(
+														(e) => e + 1
+													);
+												}}
+											>
+												Supprimer le panier
+											</div>
+											{path !== "/panier" ? (
+												<div
+													className="button"
+													onClick={(_) =>
+														navigate("/panier")
+													}
+												>
+													Voir Panier
+												</div>
+											) : (
+												<></>
+											)}
+										</span>
+									) : (
+										<></>
+									)}
+
+									{path !== "/profile" ? (
 										<div
 											className="button"
-											onClick={(_) => navigate("/panier")}
+											onClick={(_) =>
+												navigate("/profile")
+											}
 										>
-											Voir Panier
+											Voir profile
 										</div>
 									) : (
 										<></>
 									)}
 								</span>
 							) : (
-								<></>
+								<span>
+									<div
+										className="button"
+										onClick={(_) =>
+											setChoiceAdmin("restant")
+										}
+									>
+										Voir les stocks restants
+									</div>
+									<div
+										className="button"
+										onClick={(_) =>
+											setChoiceAdmin("perime")
+										}
+									>
+										Voir les stocks perimé
+									</div>
+								</span>
 							)}
-
-							{path !== "/profile" ? (
+							{path !== "/" ? (
 								<div
 									className="button"
-									onClick={(_) => navigate("/profile")}
+									onClick={(_) => navigate("/")}
 								>
-									Voir profile
+									Page d'acceuil
 								</div>
 							) : (
 								<></>
 							)}
-						</span>
-					) : (
-						<span>
 							<div
 								className="button"
-								onClick={(_) => setChoiceAdmin("restant")}
+								onClick={(_) => {
+									disconnect();
+									setIsLogIn("");
+									setIsAdmin(false);
+									setIsLoad(false);
+									if (path !== "/") navigate("/");
+								}}
 							>
-								Voir les stocks restants
+								Se déconnecter
 							</div>
-							<div
-								className="button"
-								onClick={(_) => setChoiceAdmin("perime")}
-							>
-								Voir les stocks perimé
-							</div>
-						</span>
-					)}
-					{path !== "/" ? (
-						<div className="button" onClick={(_) => navigate("/")}>
-							Page d'acceuil
 						</div>
 					) : (
-						<></>
+						<div id="connectionBlock">
+							<label>Nom d'utilisateur :</label>
+							<input
+								type="text"
+								id="username"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								onKeyUp={keyInputHandler}
+							/>
+							<label>Mot de passe :</label>
+							<input
+								type="password"
+								id="password"
+								ref={input2}
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								onKeyUp={keyInputHandler}
+							/>
+							<div className="checkbox-wrapper-14">
+								<input
+									id="s1-14"
+									type="checkbox"
+									className="switch"
+									onChange={showPassword}
+								/>
+								<label htmlFor="s1-14" className="clickable">
+									Montrer le mot de passe
+								</label>
+							</div>
+							<span
+								id="connectionButton"
+								className="button"
+								onClick={tryLogIn}
+							>
+								Connection
+							</span>
+							<div>{textConnection}</div>
+						</div>
 					)}
-					<div
-						className="button"
-						onClick={(_) => {
-							disconnect();
-							setIsLogIn("");
-							setIsAdmin(false);
-							setIsLoad(false);
-							if (path !== "/") navigate("/");
-						}}
-					>
-						Se déconnecter
-					</div>
 				</div>
 			) : (
-				<div id="connectionBlock">
-					<label>Nom d'utilisateur :</label>
-					<input
-						type="text"
-						id="username"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						onKeyUp={keyInputHandler}
-					/>
-					<label>Mot de passe :</label>
-					<input
-						type="password"
-						id="password"
-						ref={input2}
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						onKeyUp={keyInputHandler}
-					/>
-					<div className="checkbox-wrapper-14">
-						<input
-							id="s1-14"
-							type="checkbox"
-							className="switch"
-							onChange={showPassword}
-						/>
-						<label htmlFor="s1-14" className="clickable">
-							Montrer le mot de passe
-						</label>
-					</div>
-					<span
-						id="connectionButton"
-						className="button"
-						onClick={tryLogIn}
-					>
-						Connection
-					</span>
-					<div>{textConnection}</div>
-				</div>
+				<></>
 			)}
-		</div>
+		</>
 	);
 };
 export default Account;
