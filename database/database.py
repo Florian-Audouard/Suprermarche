@@ -7,6 +7,7 @@ import os
 from random import choice, randint, sample
 import re
 import urllib.parse
+from numpy import var
 import psycopg2
 from dotenv import dotenv_values
 
@@ -205,7 +206,7 @@ def get_all_stock(cur, recherche, categorie, sous_categorie):
 @clean_querry
 def get_all_stock_perime_data(cur, recherche, categorie, sous_categorie):
     cur.execute(
-        """SELECT * FROM Produit_in_stock WHERE Etat ='En Stock' AND Date_Peremption < CURRENT_DATE
+        """SELECT Num_Produit, nom_produit,marque,Date_Arrive,Date_Peremption FROM Produit_in_stock WHERE Etat ='En Stock' AND Date_Peremption < CURRENT_DATE
         AND (Nom_produit ILIKE %(recherche)s OR Marque ILIKE %(recherche)s OR Description ILIKE %(recherche)s)
                     AND (Categorie=%(categorie)s OR %(categorie)s='all')
                     AND (Sous_Categorie=%(sous_categorie)s OR %(sous_categorie)s='all');""",
@@ -243,7 +244,7 @@ def get_detail_historique(cur, num_achat):
 
 @clean_querry
 def get_historique(cur, username, password):
-    if not auth(cur, username, password)["auth"]:
+    if not verif_client(cur, username, password):
         return False
     table = []
     for i in get_historique_data(cur, username):
@@ -251,13 +252,36 @@ def get_historique(cur, username, password):
     return table
 
 
+def verif_client(cur, username, password):
+    var = auth(cur, username, password)
+    return var["role"] == "Client" and var["auth"]
+
+
+def verif_admin(cur, username, password):
+    var = auth(cur, username, password)
+    return var["role"] == "Admin" and var["auth"]
+
+
 @clean_querry
-def change_stock_retire(cur, num_produit):
+def change_stock_retire(cur, num_produit, username, password):
+    if not verif_admin(cur, username, password):
+        return False
     cur.execute(
         """UPDATE stock
             SET Etat = 'Retire'
             WHERE Num_Produit = %(num_produit)s;""",
         {"num_produit": num_produit},
+    )
+
+
+@clean_querry
+def change_stock_retire_all(cur, username, password):
+    if not verif_admin(cur, username, password):
+        return False
+    cur.execute(
+        """UPDATE stock
+            SET Etat = 'Retire'
+            WHERE Etat ='En Stock' AND Date_Peremption < CURRENT_DATE;"""
     )
 
 
@@ -287,7 +311,7 @@ def add_produit(cur, numero, quantite):
 
 @clean_querry
 def transaction(cur, username, password, liste_produit):
-    if not auth(cur, username, password)["auth"]:
+    if not verif_client(cur, username, password):
         return False
     cur.execute(
         """SELECT num_client FROM Client WHERE username=%(username)s; """,

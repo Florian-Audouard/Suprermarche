@@ -11,17 +11,15 @@
     box-shadow: 0 0 5px rgb(0,255,150);
     border-radius: 5px;
     color: white;
-    font-size: 18px;
+    font-size: 0.9vw;
     padding: 10px;
-    align-items: center;
-    justify-content: flex-start;
-    align-items: center;
-    display: flex;
-    :nth-child(2){
-        margin-left: 10px;
+    display: grid;
+    grid-template-columns: 3% 20% 20% 25% 16% 16%;
+    >:first-child{
+        text-align: left;
     }
-    > :not(:first-child):not(:nth-child(2)) {
-        margin:auto
+    >:last-child{
+        text-align: right;
     }
 }
 
@@ -32,13 +30,19 @@
     box-shadow: 0 0 5px rgb(0,255,150);
     border-radius: 5px;
     color: white;
-    font-size: 18px;
+    font-size: 0.9vw;
     padding: 10px;
     align-items: center;
     display: grid;
-    grid-template-columns: 340px 300px 300px 300px;
+    grid-template-columns: 35% 20% 20% 25%;
     margin-left: 50px;
     margin-right: 50px;
     margin-top: 20px;
     margin-bottom: 10px;
+    >:first-child{
+        text-align: left;
+    }
+    >:last-child{
+        text-align: right;
+    }
 }

@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { delPanier, getPanierCookie } from "../helpers/Panier";
+import {
+	deleteArticlePanier,
+	delPanier,
+	getPanierCookie,
+} from "../helpers/Panier";
 import { useNavigate } from "react-router-dom";
 import ArticlePanier from "../components/ArticlePanier";
 import { getPassword, logIn } from "../helpers/LogIn";
 import { getUrl } from "../helpers/GetUrl";
 import Account from "../components/Account";
+import "../styles/pages/Panier.css";
 
 const Panier = () => {
 	const navigate = useNavigate();
@@ -13,6 +18,8 @@ const Panier = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLogIn, setIsLogIn] = useState("");
+	const [totalPrice, setTotalPrice] = useState(0);
+	const [totalQuantite, setTotalQuantite] = useState(0);
 	useEffect(() => {
 		setChangePanier(0);
 		logIn(setIsLogIn, setUsername, (_) => {});
@@ -25,6 +32,16 @@ const Panier = () => {
 		setPanier(getPanierCookie());
 	}, [changePanier]);
 
+	useEffect(() => {
+		let price = 0;
+		let quantite = 0;
+		Object.entries(panier).forEach(([key, value]) => {
+			price += value.prix * value.quantite;
+			quantite += value.quantite;
+		});
+		setTotalPrice(price.toFixed(2));
+		setTotalQuantite(quantite);
+	}, [panier]);
 	function transformPanier() {
 		const listeProduit = [];
 		Object.entries(panier).forEach(([key, value]) => {
@@ -63,22 +80,39 @@ const Panier = () => {
 				setChoiceAdmin={(_) => {}}
 			></Account>
 			{Object.keys(panier).length === 0 ? (
-				<div>Votre panier est vide.</div>
+				<h1 id="middle">Votre panier est vide</h1>
 			) : (
-				<>
-					<h1>Panier</h1>
-					{Object.entries(panier).map(([key, value]) => (
-						<ArticlePanier
-							key={key}
-							nom={value.nom}
-							marque={value.marque}
-							description={value.description}
-							prix={value.prix}
-							quantite={value.quantite}
-						></ArticlePanier>
-					))}
-					<button onClick={transaction}>Valider le panier</button>
-				</>
+				<div className="containerPanier">
+					<h1>Votre Panier : </h1>
+					<div id="ArticlePanierContainer">
+						{Object.entries(panier).map(([key, value]) => (
+							<ArticlePanier
+								key={key}
+								nom={value.nom}
+								marque={value.marque}
+								description={value.description}
+								prix={value.prix}
+								quantite={value.quantite}
+								fonctionDelete={() => {
+									deleteArticlePanier(key);
+									setChangePanier(changePanier + 1);
+								}}
+							></ArticlePanier>
+						))}
+					</div>
+					<div id="totalPanier">
+						<h2>
+							Total : {totalQuantite} article
+							{totalQuantite !== 1 ? "s" : ""} pour {totalPrice}€
+						</h2>
+					</div>
+					<div
+						className="button validateButton"
+						onClick={transaction}
+					>
+						Valider le panier
+					</div>
+				</div>
 			)}
 		</div>
 	);

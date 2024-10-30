@@ -18,6 +18,7 @@ CORS(app, origins="http://localhost:3000")
 # Si il est mis plus haut la page crash
 from database.database import (
     add_produit,
+    change_stock_retire_all,
     get_data,
     get_profil,
     get_stock_dispo,
@@ -108,8 +109,16 @@ def log_in():
 @app.route("/retireStock", methods=["POST"])
 def change_stock_retire_server():
     result = request.get_data()
-    num_produit = json.loads(result.decode("utf-8"))["numProduit"]
-    change_stock_retire(num_produit)
+    result = json.loads(result.decode("utf-8"))
+    change_stock_retire(result["numProduit"], result["username"], result["password"])
+    return "ok"
+
+
+@app.route("/retireStockAll", methods=["POST"])
+def change_stock_retire_all_server():
+    result = request.get_data()
+    result = json.loads(result.decode("utf-8"))
+    change_stock_retire_all(result["username"], result["password"])
     return "ok"
 
 

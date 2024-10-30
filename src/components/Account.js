@@ -89,12 +89,16 @@ const Account = ({
 			totalPrix += panier[key].prix * panier[key].quantite;
 		}
 		totalPrix = totalPrix.toFixed(2);
+		let s = "";
+		if (totalQuantite !== 1) s = "s";
 		setPanierText(
-			"Nombre d'articles : " +
+			"Total : " +
 				totalQuantite +
-				" Prix total : " +
+				" article" +
+				s +
+				" pour " +
 				totalPrix +
-				"€"
+				" €"
 		);
 	}, [panierChange]);
 	const keyInputHandler = (event) => {

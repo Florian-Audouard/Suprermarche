@@ -7,7 +7,7 @@ const NotFound = () => {
 		navigate("/");
 	}, [navigate]);
 	return (
-		<div>
+		<div id="middle">
 			Cette page n'existe pas vous aller être redirigé si cela n'est pas
 			le cas :{" "}
 			<span className="button" onClick={(_) => navigate("/")}>

@@ -91,3 +91,35 @@ input:-webkit-autofill
 .inline{
     display: inline-block;
 }
+
+h1{
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+#middle{
+    
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+height: 100vh;
+    h1{
+        font-size: 70px;
+    }p{
+        font-size: 25px;
+    }
+}
+
+
+.cross{
+    font-size: 17px;
+    margin-left: 5px;
+    transition: 0.5s ;
+
+}
+.cross:hover{
+    transform: scale(1.5);
+    color: rgb(0,150,50);
+}

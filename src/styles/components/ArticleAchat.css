@@ -13,10 +13,7 @@
 .videPanier{
     color:transparent
 }
-.cross{
-    font-size: 17px;
-    margin-left: 5px;
-}
+
 .containerCross{
     display: flex;
     justify-content: center;

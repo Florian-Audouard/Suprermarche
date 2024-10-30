@@ -25,7 +25,7 @@ const Historique = ({ histprincipal, histdetail }) => {
 				<span>Prix total : {histprincipal[4]} €</span>
 			</div>
 			{detail ? (
-				<div className="gridWrapper">
+				<div>
 					{histdetail.map((e, i) => (
 						<div key={i} id="historiqueDetail">
 							<span>{e[0] + " " + e[1]}</span>

@@ -60,6 +60,7 @@ const Client = ({ panierChange, setPanierChange }) => {
 				recherche={recherche}
 				setRecherche={setRecherche}
 			></SearchBar>
+			<h1>Articles : </h1>
 			<div className="clientContainer">
 				{articleTab.map((e) => (
 					<ArticleAchat
