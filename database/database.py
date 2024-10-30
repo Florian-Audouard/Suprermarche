@@ -5,9 +5,7 @@
 # pylint:disable=trailing-whitespace
 import os
 from random import choice, randint, sample
-import re
 import urllib.parse
-from numpy import var
 import psycopg2
 from dotenv import dotenv_values
 

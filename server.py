@@ -7,10 +7,8 @@
 # pylint:disable=line-too-long
 import os
 import json
-from webbrowser import get
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
-from dotenv import dotenv_values
 
 
 app = Flask(__name__, static_folder="./build")
