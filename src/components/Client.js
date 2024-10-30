@@ -11,25 +11,38 @@ const Client = ({ panierChange, setPanierChange }) => {
 	const [categorie, setCategorie] = useState("");
 	const [sousCategorie, setSousCategorie] = useState("");
 	const [recherche, setRecherche] = useState("");
+	const [waitResponse, setWaitResponse] = useState(false);
+	/* eslint-disable */
 	useEffect(() => {
+		function fetchArticle() {
+			if (waitResponse) {
+				setTimeout(fetchArticle, 100);
+				return;
+			}
+			setWaitResponse(true);
+			fetch(getUrl() + "/getStockDispo", {
+				method: "POST",
+				body: JSON.stringify({
+					categorie,
+					sousCategorie,
+					recherche,
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					console.log("data", data);
+					setArticleTab(data);
+					setWaitResponse(false);
+				});
+		}
+
 		setPanier(getPanierCookie());
-		console.log(categorie);
-		console.log(sousCategorie);
-		console.log(recherche);
-		fetch(getUrl() + "/getStockDispo", {
-			method: "POST",
-			body: JSON.stringify({
-				categorie,
-				sousCategorie,
-				recherche,
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log("data", data);
-				setArticleTab(data);
-			});
+		console.log("cattegorie", categorie);
+		console.log("sousCategorie", sousCategorie);
+		console.log("recherche", recherche);
+		fetchArticle();
 	}, [categorie, sousCategorie, recherche]);
+	/* eslint-enable */
 	useEffect(() => {
 		setPanier(getPanierCookie());
 	}, [panierChange]);
