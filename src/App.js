@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./styles/App.css";
 import Home from "./pages/Home";
@@ -7,6 +7,9 @@ import Profile from "./pages/Profile";
 import Panier from "./pages/Panier";
 
 function App() {
+	useEffect(() => {
+		document.title = "Supermarché";
+	}, []);
 	return (
 		<BrowserRouter>
 			<Routes>

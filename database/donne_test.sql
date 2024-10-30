@@ -9,7 +9,7 @@ INSERT INTO Client (Nom,Prenom,Pt_Fidelite,Age,Mail,Num_Tel,Username,Password) V
     ('Laurent', 'Nicolas', 0, 27, 'nicolas.laurent@mail.com', '0609101112','NLaurent','70d4539ead3248bd4b79ede8ad3954ea'); --shreckislove
 
 INSERT INTO Admin (Nom,Prenom,Username,Password) VALUES
-    ('Dupont', 'Jean', 'JDupont', '21232f297a57a5a743894a0e4a801fc3');
+    ('Dupont', 'Jean', 'JDupont', '21232f297a57a5a743894a0e4a801fc3'); -- admin
 
 INSERT INTO Paiement VALUES
     (1, 'Carte bancaire'),

@@ -66,3 +66,11 @@ Avec domaine Etat : En stock, Vendu, Retiré
 - Pour lancer le site web éxecuter la commande *`npm start`*
 
 # Attention il faut que le server sois en route pour que le site web fonctionne correctement
+
+## 3 - Utilisation du site web
+- pour vous connecter vous pouver utiliser les utilisateur et mot de passe suivant : 
+```
+Role   | Utilisateur | Mot de passe
+Client | PDubois     | azerty
+Admin  | JDupont     | admin
+```

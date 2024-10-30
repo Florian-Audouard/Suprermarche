@@ -107,8 +107,13 @@ align-items: center;
 height: 100vh;
     h1{
         font-size: 70px;
-    }p{
+    }
+    p{
         font-size: 25px;
+    }
+    a{
+        text-decoration: none;
+        color: white;
     }
 }
 

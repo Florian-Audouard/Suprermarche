@@ -1,5 +1,4 @@
 import React from "react";
-
 const Presentation = () => {
 	return (
 		<div id="middle">
@@ -12,6 +11,12 @@ const Presentation = () => {
 				Profitez de la meilleure qualité au meilleur prix, directement
 				depuis chez vous.
 			</p>
+			<a
+				href="https://github.com/Florian-Audouard/Suprermarche"
+				className="button"
+			>
+				Pour voir le code source de cette application clicker ici
+			</a>
 		</div>
 	);
 };
