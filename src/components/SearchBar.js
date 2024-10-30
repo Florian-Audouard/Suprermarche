@@ -25,8 +25,6 @@ const SearchBar = ({
 			});
 	}, [setCategorie, setSousCategorie, setRecherche]);
 	useEffect(() => {
-		setSousCategorie("");
-
 		if (categorie === "" || categorie === "all") {
 			setSousCategorieTab([]);
 			return;
@@ -52,7 +50,10 @@ const SearchBar = ({
 				placeholder="Recherche..."
 			/>
 			<select
-				onChange={(e) => setCategorie(e.target.value)}
+				onChange={(e) => {
+					setCategorie(e.target.value);
+					setSousCategorie("");
+				}}
 				value={categorie}
 			>
 				<option value="" disabled hidden>
