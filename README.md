@@ -45,3 +45,24 @@ Avec domaine Etat : En stock, Vendu, Retiré
 
 - Si deux clients achètent un même produit lorqu'il y a peu de stock, il y a un problème de concurrence sur l'achat du produit avec un mëme numéro car il ne peut être acheté qu'une fois.
 - Lors d'un achat, si au même moment un restock est effectué, cela peut entrainer une modification de la ligne de l'article. Il y a donc concurrence entre l'achat et la modification du produit.
+
+# Instalation et lancement de l'application en local
+## 1 - Lancement du server
+- lancer la commande *`pip install -r requirements.txt`* a la racine du projet pour installer tous les packages python nécessaires.
+- Créer un fichier *`.env`* dans le dossier database de ce style la :
+   ```ini
+    HOST_DB=localhost
+    PORT_DB=5432
+    DATABASE_DB=flaskapp
+    USER_DB=flaskapp
+    PASSWORD_DB=flaskapp
+    ```
+- éxecuter le fichier python database.py pour initialiser la base de données
+- éxecuter le fichier python server.py pour lancer le server qui va servir d'intermediaire entre la base de données et le site web
+
+## 2 - Lancement du site web
+- Il faut avoir [Node](https://nodejs.org/fr) d'installer pour faire fonctionner le site web
+- A la racine du projet éxecuter la commande *`npm install`*
+- Pour lancer le site web éxecuter la commande *`npm start`*
+
+# Attention il faut que le server sois en route pour que le site web fonctionne correctement
