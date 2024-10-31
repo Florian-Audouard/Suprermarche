@@ -6,8 +6,7 @@ DROP TABLE IF EXISTS
     Description,
     Stock,
     Achat,
-    Ligne_Achat,
-    Last_Update CASCADE;
+    Ligne_Achat CASCADE;
 
 -- Creation des tables
 
@@ -87,11 +86,6 @@ PRIMARY KEY (Num_Produit,Num_Achat),
 
 FOREIGN KEY(Num_Produit) REFERENCES Stock(Num_Produit),
 FOREIGN KEY(Num_Achat) REFERENCES Achat(Num_Achat)
-);
-
-CREATE TABLE Last_Update(
-    num_date INT PRIMARY KEY,
-    Date_Update DATE
 );
 
 

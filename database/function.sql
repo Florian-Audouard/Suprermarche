@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION add_stock_multiple(Num_Produit Stock.Num_Description%
 
         FOR i IN 1..nombre_ajout LOOP
             future_date_arrive := ROUND(RANDOM()*num_debut_date_arrive);
-            future_date_peremptuion := ROUND(RANDOM()*(interval_date_fin-2))+2;
+            future_date_peremptuion := ROUND((RANDOM())*(interval_date_fin));
             PERFORM add_stock(Num_Produit,future_date_arrive,future_date_peremptuion);
         END LOOP;
     END$$;
@@ -37,13 +37,13 @@ CREATE OR REPLACE FUNCTION add_stock_init(Num_Produit Stock.Num_Description%TYPE
         loop_num INT;
     BEGIN
         loop_num = ROUND(RANDOM()*(10-5))+5;
-        PERFORM add_stock_multiple(Num_Produit,5,10,loop_num);
+        PERFORM add_stock_multiple(Num_Produit,10,50,loop_num);
     END$$;
 
 --Creation d'une fonction qui permet de remplir un stock de produit d'une quantité fixé
 CREATE OR REPLACE FUNCTION restock_fixe(Num_Produit Stock.Num_Description%TYPE, nombre_ajout INT) RETURNS void LANGUAGE PLPGSQL AS $$
     BEGIN
-        PERFORM add_stock_multiple(Num_Produit,0,5,nombre_ajout);
+        PERFORM add_stock_multiple(Num_Produit,0,50,nombre_ajout);
     END$$;
 
 --Creation d'une fonction qui permet de remplir un stock de produit d'une quantité aléatoire
