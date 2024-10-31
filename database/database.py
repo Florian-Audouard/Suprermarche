@@ -8,7 +8,6 @@ from random import choice, randint, sample
 import urllib.parse
 import psycopg2
 from dotenv import dotenv_values
-from datetime import date, datetime, timedelta
 
 os.chdir(os.path.dirname(__file__))
 
@@ -174,6 +173,7 @@ def get_profil(cur, username, password):
 # permet d'obtenir tous les articles disponibles en magasin
 @clean_querry
 def get_stock_dispo(cur, recherche, categorie, sous_categorie):
+    verif_stock_without_connexion(cur)
     cur.execute(
         """select num_description,nom_produit,marque, description,prix,quantite
             FROM Stock_Quantite_Disponible 

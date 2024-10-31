@@ -28,7 +28,6 @@ from database.database import (
     change_stock_retire,
     transaction,
     get_sous_categories,
-    verif_stock,
 )
 
 
@@ -62,7 +61,6 @@ def get_profil_client():
 
 @app.route("/getStockDispo", methods=["POST"])
 def get_stock_dispo_server():
-
     result = request.get_data()
     querry = search_bar_querry(json.loads(result.decode("utf-8")))
     return jsonify(
@@ -158,7 +156,6 @@ def main():
     os.chdir(os.path.dirname(__file__))
     port = 2500
     app.run(host="0.0.0.0", port=port)
-    verif_stock()
 
 
 if __name__ == "__main__":
