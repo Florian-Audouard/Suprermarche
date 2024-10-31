@@ -99,7 +99,7 @@ CREATE OR REPLACE VIEW Produit AS (
 -- Creation d'une view pour recuperer les quantites non vendu et non perime d'un produit
 CREATE OR REPLACE VIEW Stock_Quantite AS (
     SELECT produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Categorie,produit.Sous_Categorie,coalesce(tmp.quantite,0) AS quantite
-        FROM (SELECT stock.num_description, count(stock.num_description) AS quantite FROM Stock WHERE stock.Etat = 'En Stock'  GROUP BY stock.num_description) as tmp
+        FROM (SELECT stock.num_description, count(stock.num_description) AS quantite FROM Stock WHERE stock.Etat = 'En Stock' AND Date_Peremption > CURRENT_DATE  GROUP BY stock.num_description) as tmp
         RIGHT OUTER JOIN Produit ON Produit.num_description = tmp.num_description  
         ORDER BY Produit.num_description ASC
 );
@@ -107,11 +107,7 @@ CREATE OR REPLACE VIEW Stock_Quantite AS (
 
 -- Creation d'une view pour récuperer les produits non vendu et non perime qui sont disponibles en magasin
 CREATE OR REPLACE VIEW Stock_Quantite_Disponible AS (
-    SELECT produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Categorie,produit.Sous_Categorie,coalesce(tmp.quantite,0) AS quantite
-        FROM (SELECT stock.num_description, count(stock.num_description) AS quantite FROM Stock WHERE stock.Etat = 'En Stock' AND Date_Peremption > CURRENT_DATE  GROUP BY stock.num_description) as tmp
-        RIGHT OUTER JOIN Produit ON Produit.num_description = tmp.num_description
-        WHERE tmp.quantite > 0
-        ORDER BY Produit.num_description ASC
+    SELECT * from Stock_Quantite WHERE quantite > 0
 );
 
 

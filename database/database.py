@@ -83,7 +83,7 @@ def init_data(cur):
 @clean_querry
 def add_produit_init(cur):
     cur.execute(
-        """SELECT Num_Description FROM description WHERE Num_Description Not in (SELECT Num_Description from Stock_Quantite_disponible  where quantite > 5)"""
+        """SELECT Num_Description FROM description WHERE Num_Description Not in (SELECT Num_Description from Stock_Quantite where quantite > 5)"""
     )
     list_produit = cur.fetchall()
     list_produit = [x[0] for x in list_produit]
