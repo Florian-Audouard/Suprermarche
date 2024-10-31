@@ -8,6 +8,7 @@ from random import choice, randint, sample
 import urllib.parse
 import psycopg2
 from dotenv import dotenv_values
+from datetime import date, datetime, timedelta
 
 os.chdir(os.path.dirname(__file__))
 
@@ -82,7 +83,9 @@ def init_data(cur):
 
 @clean_querry
 def add_produit_init(cur):
-    cur.execute("""SELECT Num_Description FROM Description;""")
+    cur.execute(
+        """SELECT Num_Description FROM description WHERE Num_Description Not in (SELECT Num_Description from Stock_Quantite_disponible  where quantite > 5)"""
+    )
     list_produit = cur.fetchall()
     list_produit = [x[0] for x in list_produit]
     for produit in tqdm(list_produit, desc="Adding stock"):
@@ -92,6 +95,9 @@ def add_produit_init(cur):
                 "Num_Produit": produit,
             },
         )
+    cur.execute(
+        """UPDATE Last_Update SET Date_Update=CURRENT_DATE - interval '1 day' WHERE num_date=1;"""
+    )
 
 
 def achat(cur, client, paiement, list_achat, nb_jour):
@@ -337,6 +343,38 @@ def get_sous_categories(cur, categorie):
     )
     t = [x[0] for x in cur.fetchall()]
     return t
+
+
+def add_produit_update(cur):
+    cur.execute(
+        """SELECT Num_Description FROM description WHERE Num_Description Not in (SELECT Num_Description from Stock_Quantite_disponible  where quantite > 5)"""
+    )
+    list_produit = cur.fetchall()
+    list_produit = [x[0] for x in list_produit]
+    for produit in list_produit:
+        cur.execute(
+            """SELECT add_stock_init(%(Num_Produit)s);""",
+            {
+                "Num_Produit": produit,
+            },
+        )
+    print("Update stock")
+    cur.execute("""UPDATE Last_Update SET Date_Update=CURRENT_DATE WHERE num_date=1;""")
+
+
+def verif_stock_without_connexion(cur):
+    cur.execute(
+        """SELECT COUNT(*) FROM Last_Update WHERE CURRENT_DATE > Date_Update ;"""
+    )
+    res = cur.fetchall()[0][0]
+    if res == 0:
+        return
+    add_produit_update(cur)
+
+
+@clean_querry
+def verif_stock(cur):
+    verif_stock_without_connexion(cur)
 
 
 if __name__ == "__main__":

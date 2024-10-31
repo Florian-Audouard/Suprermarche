@@ -15,7 +15,8 @@ INSERT INTO Paiement VALUES
     (1, 'Carte bancaire'),
     (2, 'Chèque'),
     (3, 'Espèces');
-
+    
+INSERT INTO Last_Update VALUES (1,CURRENT_DATE - interval '1 day');
     
 INSERT INTO Categorie VALUES
     (1, 'Alimentation', 'Fruits et légumes'),

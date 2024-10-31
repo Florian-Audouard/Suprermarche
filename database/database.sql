@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS
     Description,
     Stock,
     Achat,
-    Ligne_Achat CASCADE;
+    Ligne_Achat,
+    Last_Update CASCADE;
 
 -- Creation des tables
 
@@ -88,6 +89,11 @@ FOREIGN KEY(Num_Produit) REFERENCES Stock(Num_Produit),
 FOREIGN KEY(Num_Achat) REFERENCES Achat(Num_Achat)
 );
 
+CREATE TABLE Last_Update(
+    num_date INT PRIMARY KEY,
+    Date_Update DATE
+);
+
 
 -- Creation d'une view pour joindre toutes les informations relatives aux produits
 CREATE OR REPLACE VIEW Produit AS (
@@ -98,20 +104,20 @@ CREATE OR REPLACE VIEW Produit AS (
 
 -- Creation d'une view pour recuperer les quantites non vendu et non perime d'un produit
 CREATE OR REPLACE VIEW Stock_Quantite AS (
-    SELECT Produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Categorie,produit.Sous_Categorie,tmp.quantite
-    FROM Produit JOIN
-    (SELECT produit.num_description,count(stock.num_description) AS quantite 
-        FROM stock RIGHT JOIN Produit ON Produit.num_description = stock.num_description
-        WHERE stock.Etat = 'En Stock' AND stock.Date_Peremption > CURRENT_DATE
-        GROUP BY Produit.num_description) AS tmp ON tmp.num_description = produit.num_description
+    SELECT produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Categorie,produit.Sous_Categorie,coalesce(tmp.quantite,0) AS quantite
+        FROM (SELECT stock.num_description, count(stock.num_description) AS quantite FROM Stock WHERE stock.Etat = 'En Stock'  GROUP BY stock.num_description) as tmp
+        RIGHT OUTER JOIN Produit ON Produit.num_description = tmp.num_description  
         ORDER BY Produit.num_description ASC
 );
 
 
 -- Creation d'une view pour récuperer les produits non vendu et non perime qui sont disponibles en magasin
 CREATE OR REPLACE VIEW Stock_Quantite_Disponible AS (
-    SELECT *
-    FROM Stock_Quantite WHERE quantite >0
+    SELECT produit.num_description,produit.Nom_Produit,produit.Marque,produit.description,produit.prix,produit.Categorie,produit.Sous_Categorie,coalesce(tmp.quantite,0) AS quantite
+        FROM (SELECT stock.num_description, count(stock.num_description) AS quantite FROM Stock WHERE stock.Etat = 'En Stock' AND Date_Peremption > CURRENT_DATE  GROUP BY stock.num_description) as tmp
+        RIGHT OUTER JOIN Produit ON Produit.num_description = tmp.num_description
+        WHERE tmp.quantite > 0
+        ORDER BY Produit.num_description ASC
 );
 
 
