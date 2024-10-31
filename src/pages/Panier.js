@@ -20,9 +20,11 @@ const Panier = () => {
 	const [isLogIn, setIsLogIn] = useState("");
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [totalQuantite, setTotalQuantite] = useState(0);
+	const [achat, setAchat] = useState(false);
 	useEffect(() => {
 		setChangePanier(0);
 		logIn(setIsLogIn, setUsername, (_) => {});
+		setAchat(false);
 	}, []);
 	useEffect(() => {
 		if (isLogIn === false) navigate("/");
@@ -66,6 +68,7 @@ const Panier = () => {
 				if (data === "True") {
 					delPanier();
 					setChangePanier(changePanier + 1);
+					setAchat(true);
 				}
 			});
 	}
@@ -80,7 +83,11 @@ const Panier = () => {
 				setChoiceAdmin={(_) => {}}
 			></Account>
 			{Object.keys(panier).length === 0 ? (
-				<h1 id="middle">Votre panier est vide</h1>
+				<h1 id="middle">
+					{!achat
+						? "Votre panier est vide"
+						: "Merci pour votre achat"}
+				</h1>
 			) : (
 				<div className="containerPanier">
 					<h1>Votre Panier : </h1>
