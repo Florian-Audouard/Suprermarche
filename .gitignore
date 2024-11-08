@@ -1,4 +1,4 @@
 **.env
 **/__pycache__
 /node_modules
-./pacgkage-lock.json
+package-lock.json
