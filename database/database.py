@@ -341,6 +341,42 @@ def get_sous_categories(cur, categorie):
     return t
 
 
+-- permet d'obtenir toutes les infos du client hors mdp et username
+def get_profil():  # pylint: disable=missing-function-docstring
+    with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select Num_Client,Nom,Prenom,Pt_Fidelite,Age,Mail,Num_Tel from Client;"
+            )
+            return cur.fetchall()
+
+--permet d'obtenir tous les articles disponibles en magasin
+def get_stockdispo(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select * from Stock_Quantite_Disponible;"
+            )
+            return cur.fetchall()
+
+--permet d'obtenir toutes les infos des stocks
+def get_allstock(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select * from Produit;"
+            )
+            return cur.fetchall()
+
+--permet l'historique des achats := ligneachat
+def get_historique(): # pylint: disable=missing-function-docstring
+     with psycopg2.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "select * from Ligne_Achat;"
+            )
+            return cur.fetchall()
+
 if __name__ == "__main__":
     from tqdm import tqdm
 
