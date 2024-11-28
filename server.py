@@ -157,6 +157,21 @@ def main():
     port = 2500
     app.run(host="0.0.0.0", port=port)
 
+@app.route("/getProfilClient", methods=["GET"])
+def get_ProfilClient():  # pylint: disable=missing-function-docstring
+    return jsonify({"Profil": get_profil()})
+
+@app.route("/getStockDispo", methods=["GET"])
+def get_StockDispo():  # pylint: disable=missing-function-docstring
+    return jsonify({"Stockdispo": get_stockdispo()})
+
+@app.route("/getAllStock", methods=["GET"])
+def get_AllStock():  # pylint: disable=missing-function-docstring
+    return jsonify({"AllStock": get_allstock()})
+    
+@app.route("/getHistorique",methods=["GET"])
+def get_Historique():  # pylint: disable=missing-function-docstring
+    return jsonify({"Historique": get_historique()})
 
 if __name__ == "__main__":
     main()
